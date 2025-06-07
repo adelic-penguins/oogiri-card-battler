@@ -23,10 +23,18 @@ class WsController {
 
     static actions: { [key: string]: { method: string, descriptor: PropertyDescriptor } } = {};
     actions = WsController.actions;
+    static instance: WsController | null = null;
 
     // WebSocketの接続を初期化する
-    init() {
+    constructor() {
         console.log("WebSocket initialized");
+    }
+
+    static getInstance() {
+        if (!WsController.instance) {
+            WsController.instance = new WsController();
+        }
+        return WsController.instance;
     }
 
     // メッセージを受信したときの処理
@@ -44,3 +52,5 @@ class WsController {
         }
     }
 }
+
+export default WsController;

@@ -4,6 +4,7 @@ import cors from 'cors';
 import type { Socket as NetSocket } from 'net';
 import type { Server as HttpServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
+import WsController from './WsController';
 
 // Next.jsの型定義を拡張してSocket.IOの型定義を追加
 type ReseponseWebSocket = NextApiResponse & {
@@ -32,8 +33,8 @@ export default function SocketHandler(req: NextApiRequest, res: ReseponseWebSock
 
     // メッセージを受信したら、全クライアントに送信する
     socket.on('message', (data) => {
-      io.emit('message', data);
       console.log('Received message:', data);
+      WsController.getInstance().invoke(socket);
     });
 
     // クライアントが切断した場合の処理
