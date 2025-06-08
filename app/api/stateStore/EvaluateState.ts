@@ -3,6 +3,8 @@ enum EvaluateState {
     EVALUATING = 'evaluating',
 }
 
-let currentEvaluateState: EvaluateState = EvaluateState.IDLE;
+let currentEvaluateState = {
+    value: EvaluateState.IDLE,
+};
 
 export { EvaluateState, currentEvaluateState };

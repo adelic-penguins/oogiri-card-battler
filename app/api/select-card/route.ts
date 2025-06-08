@@ -1,5 +1,14 @@
 import { NextResponse } from 'next/server';
+import wsRepository from '../repositories/WsRepository';
 
 export async function GET() {
-  return NextResponse.json({ message: 'hello' });
+	// GMにクライアントのカード選択を通知
+	wsRepository.sendMessage({
+		to: 'game_master',
+		payload: {
+			type: 'card_selected',
+			message: 'カードが選択されました。'
+		}
+	});
+	return NextResponse.json({ message: 'hello' });
 }
