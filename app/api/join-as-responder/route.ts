@@ -8,7 +8,7 @@ export async function GET() {
   clientList.push(ClientType.RESPONDENT);
 
   // ゲームマスターに参加人数を通知
-  (await wsRepository).sendMessage({
+  wsRepository.sendMessage({
     to: ClientType.GAME_MASTER,
     payload: {
       type: 'client_count',

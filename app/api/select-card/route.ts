@@ -3,7 +3,7 @@ import wsRepository from '../repositories/WsRepository';
 
 export async function GET() {
 	// GMにクライアントのカード選択を通知
-	(await wsRepository).sendMessage({
+	wsRepository.sendMessage({
 		to: 'game_master',
 		payload: {
 			type: 'card_selected',

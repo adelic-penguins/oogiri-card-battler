@@ -2,80 +2,63 @@
  * WebSocketサーバーの実装
  * ブラウザ通知用
  */
-import express from 'express';
-import { createServer } from 'http';
-import { WebSocketServer, WebSocket } from 'ws';
-import { ClientType, type InternalMessage } from './types.ts';
+import { createServer } from "http";
+import { Server, Socket, type DefaultEventsMap } from "socket.io";
+import { ClientType, type InternalMessage } from "./types.ts";
 
-const app = express();
-const server = createServer(app);
+// HTTPサーバーを作成
+const httpServer = createServer();
 
-// wsサーバーをnoServerモードで作成
-const wss = new WebSocketServer({ noServer: true });
-
-const wsClientList: Map<ClientType, WebSocket> = new Map();
-
-// HTTPアップグレード時にエンドポイントを判別
-server.on('upgrade', (request, socket, head) => {
-    const { url } = request;
-    if (url === '/client') {
-        wss.handleUpgrade(request, socket, head, (ws) => {
-            handleClient(ws);
-        });
-    } else if (url === '/internal') {
-        wss.handleUpgrade(request, socket, head, (ws) => {
-            handleInternal(ws);
-        });
-    } else {
-        socket.destroy();
-    }
+// Socket.IOサーバーを作成
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*", // 必要に応じて許可するオリジンを指定
+    },
+    transports: ['websocket'], // WebSocketのみを使用
 });
 
-// エンドポイントごとの処理
-function handleClient(ws: WebSocket) {
-    ws.on("open", () => {
-        console.log('Client connection opened');
-    });
-    ws.on('message', (data) => {
-        const jsonData = JSON.parse(data.toString());
-        console.log('Received from client:', jsonData);
-        if (jsonData.action === 'register') {
-            const clientType = jsonData.clientType as ClientType;
-            if (wsClientList.has(clientType)) {
-                console.log(`Client of type ${clientType} is already connected.`);
-                return;
-            }
-            wsClientList.set(clientType, ws);
-            console.log(`Client registered: ${clientType}`);
-        }
-    });
-}
+// クライアント接続を管理するリスト
+const wsClientList: Map<ClientType, Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>> = new Map();
 
-function handleInternal(ws: WebSocket) {
-    ws.on("open", () => {
-        console.log('Internal connection opened');
-        ws.send("Internal connection established");
+// クライアント通知用エンドポイント
+const client = io.of('/client');
+client.on('connection', (socket) => {
+    console.log('client connected');
+    // クライアントの種類を識別するためのイベントを受信
+    socket.on('register', (clientType: ClientType) => {
+        if (wsClientList.has(clientType)) {
+            console.log(`Client of type ${clientType} is already connected.`);
+            return;
+        }
+        wsClientList.set(clientType, socket);
+        console.log(`Client registered: ${clientType}`);
     });
-    ws.on('message', (data) => {
-        const jsonData = JSON.parse(data.toString()) as InternalMessage;
-        console.log('Received from internal:', jsonData);
-        // どっちの分岐に入るか確認
-        if (jsonData.to == ClientType.RESPONDENT) {
-            console.log(`Sending to: ${jsonData.to}`);
+});
+
+// 内部通信用エンドポイント
+const notify = io.of('/internal');
+notify.on('connection', (socket) => {
+    console.log('internal connected');
+    socket.on('message', (msg: InternalMessage) => {
+        console.log("msg.to == ClientType.RESPONDENT", msg.to == ClientType.RESPONDENT);
+        console.log("msg.to == ClientType.GAME_MASTER", msg.to == ClientType.GAME_MASTER);
+        if (msg.to == ClientType.RESPONDENT) {
             const respondentClient = wsClientList.get(ClientType.RESPONDENT);
             if (respondentClient) {
-                respondentClient.send(JSON.stringify(jsonData.payload));
+                respondentClient.emit('message', msg);
             }
         } else {
-            console.log(`Sending to: ${jsonData.to}`);
             const gameMasterClient = wsClientList.get(ClientType.GAME_MASTER);
             if (gameMasterClient) {
-                gameMasterClient.send(JSON.stringify(jsonData.payload));
+                gameMasterClient.emit('message', msg);
             }
         }
+        console.log('message received:', msg);
     });
-}
+});
 
-server.listen(3010, () => {
-    console.log('Server is running on port 3010');
+// サーバー起動
+const PORT = 3010;
+httpServer.listen(PORT, () => {
+    console.log(`WebSocketサーバー起動: http://localhost:${PORT}`);
 });
