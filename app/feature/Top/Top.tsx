@@ -2,10 +2,12 @@
 
 import type React from "react";
 import { styled } from "@mui/system";
-import Title from "@/app/components/common/Title";
-import Button from "@/app/components/common/Button";
+import Title from "@/app/components/Common/Title";
+import Button from "@/app/components/Common/Button";
+import { useRouter } from "next/navigation";
 
 const Top: React.FC = () => {
+	const router = useRouter();
 	return (
 		<Root>
 			<Title text={"大喜利カードバトラー"} />
@@ -13,7 +15,7 @@ const Top: React.FC = () => {
 				<Button
 					buttonType="primary"
 					buttonSize="md"
-					onClick={() => console.log("クリック")}
+					onClick={() => router.push("/waiting/gamemaster")}
 					buttonColor="#3eadff"
 				>
 					ゲームマスターとして参加
@@ -21,7 +23,7 @@ const Top: React.FC = () => {
 				<Button
 					buttonType="primary"
 					buttonSize="md"
-					onClick={() => console.log("クリック")}
+					onClick={() => router.push("/waiting/player")}
 					buttonColor="#ffc944"
 				>
 					回答者として参加
