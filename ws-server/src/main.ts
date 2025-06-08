@@ -26,10 +26,6 @@ client.on('connection', (socket) => {
     console.log('client connected');
     // クライアントの種類を識別するためのイベントを受信
     socket.on('register', (clientType: ClientType) => {
-        if (wsClientList.has(clientType)) {
-            console.log(`Client of type ${clientType} is already connected.`);
-            return;
-        }
         wsClientList.set(clientType, socket);
         console.log(`Client registered: ${clientType}`);
     });

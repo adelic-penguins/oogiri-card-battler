@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   // クエリパラメータからthemeを取得
   const searchParams = request.nextUrl.searchParams;
   const q = searchParams.get('theme');
-  wsRepository.sendMessage({
+  (await wsRepository).sendMessage({
     to: 'respondent',
     payload: {
       type: 'theme_setted',
