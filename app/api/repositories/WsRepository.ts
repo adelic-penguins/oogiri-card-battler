@@ -3,27 +3,33 @@ import { io, Socket } from "socket.io-client";
 
 class WsRepository {
     private static instance: WsRepository;
-    wsEndpoint: string = 'http://localhost:3010/internal';
+    private static wsEndpoint: string = 'http://localhost:3010/internal';
     socket: Socket | null = null;
 
-    private constructor() {
+    private constructor(socket: Socket) {
         // websocket初期化
-        this.socket = io("http://localhost:3010/internal", {
-            transports: ['websocket'],
-        });
-        this.socket.on('connect', () => {
-            console.log('WebSocket connected');
-        });
-        // 接続エラー
-        this.socket.on('connect_error', (err) => {
-            console.error('接続エラー:', err);
-            // 必要に応じてリトライやUI通知
-        });
+        this.socket = socket;
     }
 
-    public static getInstance(): WsRepository {
+    public static async getInstance(): Promise<WsRepository> {
+        const wsInit = new Promise<Socket>((resolve, reject) => {
+            const socket = io(WsRepository.wsEndpoint, {
+                transports: ['websocket'],
+            });
+            socket.on('connect', () => {
+                console.log('WebSocket connected');
+                resolve(socket);
+            });
+            // 接続エラー
+            socket.on('connect_error', (err) => {
+                console.error('接続エラー:', err);
+                reject(err);
+                // 必要に応じてリトライやUI通知
+            });
+        });
+        const socket = await wsInit;
         if (!WsRepository.instance) {
-            WsRepository.instance = new WsRepository();
+            WsRepository.instance = new WsRepository(socket);
         }
         return WsRepository.instance;
     }

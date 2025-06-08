@@ -24,7 +24,9 @@
     <ul id="messages"></ul>
     <script>
         // /clientネームスペースに接続
-        const socket = io("http://localhost:3010/client");
+        const socket = io("http://localhost:3010/client", {
+            transports: ['websocket'],
+        });
 
         const clientTypeSelect = document.getElementById('clientType');
         const registerBtn = document.getElementById('registerBtn');
