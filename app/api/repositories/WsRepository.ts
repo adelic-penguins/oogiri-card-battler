@@ -1,51 +1,41 @@
 import { InternalMessage } from "../types/types";
-import WebSocket from "ws";
+import { io, Socket } from "socket.io-client";
 
 class WsRepository {
     private static instance: WsRepository;
-    socket: WebSocket | null = null;
-    static wsEndpoint: string = 'ws://localhost:3010/internal';
+    wsEndpoint: string = 'http://localhost:3010/internal';
+    socket: Socket | null = null;
 
-    private constructor(webSocket: WebSocket) {
-        this.socket = webSocket;
-
-        this.socket.onmessage = (event) => {
-            console.log('Received message:', event.data);
-        };
-
-        this.socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+    private constructor() {
+        // websocket初期化
+        this.socket = io("http://localhost:3010/internal", {
+            transports: ['websocket'],
+        });
+        this.socket.on('connect', () => {
+            console.log('WebSocket connected');
+        });
+        // 接続エラー
+        this.socket.on('connect_error', (err) => {
+            console.error('接続エラー:', err);
+            // 必要に応じてリトライやUI通知
+        });
     }
 
-    public static async getInstance(): Promise<WsRepository> {
+    public static getInstance(): WsRepository {
         if (!WsRepository.instance) {
-            // websocket初期化
-            const wsInit = new Promise<WebSocket>((resolve, reject) => {
-                const socket = new WebSocket(this.wsEndpoint);
-
-                socket.onopen = () => {
-                    console.log('WebSocket initialized:', this.wsEndpoint);
-                    resolve(socket);
-                };
-
-                socket.onerror = (error) => {
-                    console.error('WebSocket error:', error);
-                    reject(error);
-                };
-            });
-            const socket = await wsInit;
-            WsRepository.instance = new WsRepository(socket);
+            WsRepository.instance = new WsRepository();
         }
         return WsRepository.instance;
     }
 
     public sendMessage(data: InternalMessage) {
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-            console.log('Sending message:', data);
-            this.socket.send(JSON.stringify(data));
-        } else {
-            console.error('WebSocket is not initialized or not open.');
+        if (this.socket) {
+            if (this.socket.connected) {
+                this.socket.emit('message', data);
+                console.log('Sending message:', data);
+            } else {
+                console.error('WebSocket is not initialized.');
+            }
         }
     }
 }

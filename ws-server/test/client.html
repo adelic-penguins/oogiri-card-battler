@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>WS クライアントテスト</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 </head>
 <body>
     <h1>クライアント用エンドポイントテスト</h1>
@@ -22,8 +23,8 @@
     </div>
     <ul id="messages"></ul>
     <script>
-        // wsで /client エンドポイントに接続
-        const ws = new WebSocket('ws://localhost:3010/client');
+        // /clientネームスペースに接続
+        const socket = io("http://localhost:3010/client");
 
         const clientTypeSelect = document.getElementById('clientType');
         const registerBtn = document.getElementById('registerBtn');
@@ -33,16 +34,9 @@
 
         let registered = false;
 
-        ws.addEventListener('open', () => {
-            console.log('クライアント用エンドポイントに接続しました');
-        });
-
         registerBtn.onclick = () => {
             const clientType = clientTypeSelect.value;
-            ws.send(JSON.stringify({
-                action: 'register',
-                clientType: clientType
-            }));
+            socket.emit('register', clientType);
             registered = true;
             registerBtn.disabled = true;
             clientTypeSelect.disabled = true;
@@ -52,25 +46,16 @@
         sendBtn.onclick = () => {
             const msg = msgInput.value;
             if (msg && registered) {
-                ws.send(JSON.stringify({
-                    action: 'message',
-                    text: msg,
-                    to: clientTypeSelect.value
-                }));
+                // main.tsの仕様に合わせて、toフィールド付きで送信
+                socket.emit('message', { text: msg, to: clientTypeSelect.value });
                 msgInput.value = '';
                 console.log(`メッセージ送信: ${msg}`);
             }
         };
 
-        ws.addEventListener('message', (event) => {
-            const msg = event.data;
+        socket.on('message', (msg) => {
             const li = document.createElement('li');
-            try {
-                const obj = JSON.parse(msg);
-                li.textContent = typeof obj === 'object' ? JSON.stringify(obj) : obj;
-            } catch {
-                li.textContent = msg;
-            }
+            li.textContent = typeof msg === 'object' ? JSON.stringify(msg) : msg;
             messages.appendChild(li);
         });
     </script>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import wsRepository from '../repositories/WsRepository';
+import WsRepository from '../repositories/WsRepository';
 import { EvaluateState, currentEvaluateState } from '../stateStore/EvaluateState';
 
 export async function GET(request: NextRequest) {
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const q = searchParams.get('answer');
   const answer = q || '回答がありません。';
-  (await wsRepository).sendMessage({
+  WsRepository.sendMessage({
     to: 'game_master',
     payload: {
       type: 'answer_setted',
