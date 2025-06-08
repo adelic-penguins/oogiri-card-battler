@@ -4,7 +4,7 @@
  */
 import { createServer } from "http";
 import { Server, Socket, type DefaultEventsMap } from "socket.io";
-import { ClientType, type InternalMessage } from "./types";
+import { ClientType, type InternalMessage } from "./types.ts";
 
 // HTTPサーバーを作成
 const httpServer = createServer();
@@ -14,6 +14,7 @@ const io = new Server(httpServer, {
     cors: {
         origin: "*", // 必要に応じて許可するオリジンを指定
     },
+    transports: ['websocket'], // WebSocketのみを使用
 });
 
 // クライアント接続を管理するリスト
@@ -39,6 +40,8 @@ const notify = io.of('/internal');
 notify.on('connection', (socket) => {
     console.log('internal connected');
     socket.on('message', (msg: InternalMessage) => {
+        console.log("msg.to == ClientType.RESPONDENT", msg.to == ClientType.RESPONDENT);
+        console.log("msg.to == ClientType.GAME_MASTER", msg.to == ClientType.GAME_MASTER);
         if (msg.to == ClientType.RESPONDENT) {
             const respondentClient = wsClientList.get(ClientType.RESPONDENT);
             if (respondentClient) {

@@ -8,9 +8,16 @@ class WsRepository {
 
     private constructor() {
         // websocket初期化
-        this.socket = io("http://localhost:3010/internal");
+        this.socket = io("http://localhost:3010/internal", {
+            transports: ['websocket'],
+        });
         this.socket.on('connect', () => {
             console.log('WebSocket connected');
+        });
+        // 接続エラー
+        this.socket.on('connect_error', (err) => {
+            console.error('接続エラー:', err);
+            // 必要に応じてリトライやUI通知
         });
     }
 
@@ -23,7 +30,12 @@ class WsRepository {
 
     public sendMessage(data: InternalMessage) {
         if (this.socket) {
-            this.socket.emit('message', data);
+            if (this.socket.connected) {
+                this.socket.emit('message', data);
+                console.log('Sending message:', data);
+            } else {
+                console.error('WebSocket is not initialized.');
+            }
         }
     }
 }
