@@ -17,6 +17,14 @@
 			"correctness": {
 				"noUnusedImports": "warn",
 				"noUnusedVariables": "warn"
+			},
+			"style": {
+				"useNodejsImportProtocol": "off",
+				"noInferrableTypes": "off",
+				"noNonNullAssertion": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
 			}
 		}
 	},
