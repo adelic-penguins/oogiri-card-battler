@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>WS クライアントテスト</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>クライアント用エンドポイントテスト</h1>
+    <div>
+        <label>
+            クライアント種別:
+            <select id="clientType">
+                <option value="respondent">respondent</option>
+                <option value="game_master">game_master</option>
+            </select>
+        </label>
+        <button id="registerBtn">登録</button>
+    </div>
+    <div>
+        <input type="text" id="msgInput" placeholder="メッセージを入力">
+        <button id="sendBtn">送信</button>
+    </div>
+    <ul id="messages"></ul>
+    <script>
+        // /clientネームスペースに接続
+        const socket = io("http://localhost:3010/client");
+
+        const clientTypeSelect = document.getElementById('clientType');
+        const registerBtn = document.getElementById('registerBtn');
+        const msgInput = document.getElementById('msgInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const messages = document.getElementById('messages');
+
+        let registered = false;
+
+        registerBtn.onclick = () => {
+            const clientType = clientTypeSelect.value;
+            socket.emit('register', clientType);
+            registered = true;
+            registerBtn.disabled = true;
+            clientTypeSelect.disabled = true;
+            console.log(`登録: ${clientType}`);
+        };
+
+        sendBtn.onclick = () => {
+            const msg = msgInput.value;
+            if (msg && registered) {
+                // main.tsの仕様に合わせて、toフィールド付きで送信
+                socket.emit('message', { text: msg, to: clientTypeSelect.value });
+                msgInput.value = '';
+                console.log(`メッセージ送信: ${msg}`);
+            }
+        };
+
+        socket.on('message', (msg) => {
+            const li = document.createElement('li');
+            li.textContent = typeof msg === 'object' ? JSON.stringify(msg) : msg;
+            messages.appendChild(li);
+        });
+    </script>
+</body>
+</html>
