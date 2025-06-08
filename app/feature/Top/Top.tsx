@@ -2,8 +2,8 @@
 
 import type React from "react";
 import { styled } from "@mui/system";
-import Title from "@/app/components/Common/Title";
-import Button from "@/app/components/Common/Button";
+import Title from "@/app/components/common/Title";
+import Button from "@/app/components/common/Button";
 import { useRouter } from "next/navigation";
 
 const Top: React.FC = () => {

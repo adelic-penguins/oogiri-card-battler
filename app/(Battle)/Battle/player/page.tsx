@@ -3,8 +3,8 @@
 import type React from "react";
 import { useState, useEffect } from "react";
 import { styled } from "@mui/system";
-import Title from "@/app/components/Common/Title";
-import Button from "@/app/components/Common/Button";
+import Title from "@/app/components/common/Title";
+import Button from "@/app/components/common/Button";
 import Card from "@/app/components/Card/Card";
 import cardMock from "@/app/mock/card/card";
 import type { SelectedCardState } from "@/app/types/userState/card";
