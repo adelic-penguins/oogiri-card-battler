@@ -1,20 +1,29 @@
 "use client";
 
-import type React from "react";
+import React, {useCallback} from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Description from "@/app/components/common/Description";
+import useFetch from "@/app/hooks/useFetch";
+import {ClientMessage, ClientType} from "@/app/api/types/types";
+import {useWebSocket} from "@/app/hooks/useWebSocket";
 
 const Player: React.FC = () => {
 	const router = useRouter();
+	const { fetchJoinAsResponder } = useFetch();
+	const handleChangeWs = useCallback((data: ClientMessage) => {
+		if (data.message) {
+			if (data.type === "start_game") {
+				router.push("/battle/player");
+			}
+		}
+	},[]);
+	const { messageState } = useWebSocket(ClientType.RESPONDENT, handleChangeWs);
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			router.push("/battle/player");
-		}, 4000);
-		return () => clearTimeout(timer);
-	}, [router]);
+		fetchJoinAsResponder();
+	}, []);
 	return (
 		<Root>
 			<Title text={"あなたは回答者です"} />

@@ -12,7 +12,7 @@ export async function GET() {
     to: ClientType.GAME_MASTER,
     payload: {
       type: 'client_count',
-      count: clientList.length
+      message: `${clientList.length}`
     }
   });
 
