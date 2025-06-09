@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import type { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { styled } from "@mui/system";
 
 type Props = {

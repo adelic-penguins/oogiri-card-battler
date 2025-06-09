@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 import Player from "@/app/feature/Waiting/player/Player";
 
 const PlayerPage: React.FC = () => {

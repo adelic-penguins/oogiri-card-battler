@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 import { styled } from "@mui/system";
 import Image from "next/image";
 import { useBooleanState } from "@/app/hooks/useBooleanState";
@@ -44,7 +44,9 @@ const Root = styled("div")({
 	padding: 12,
 	width: "fit-content",
 });
-const StyledImage = styled(Image)<{ cardState: boolean }>(({ cardState }) => ({
+const StyledImage = styled(Image, {
+	shouldForwardProp: (prop) => prop !== "cardState",
+})<{ cardState: boolean }>(({ cardState }) => ({
 	border: cardState ? "4px solid #ff0000" : "4px solid transparent",
 	borderRadius: "8px",
 }));
