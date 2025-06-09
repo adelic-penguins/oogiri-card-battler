@@ -1,25 +1,9 @@
 "use client";
 
 import type React from "react";
-import { styled } from "@mui/system";
-import Title from "@/app/components/Common/Title";
-import Description from "@/app/components/Common/Description";
+import GameMaster from "@/app/feature/Waiting/gamemaster/GameMaster";
 
-const GameMaster: React.FC = () => {
-	return (
-		<Root>
-			<Title text={"あなたはゲームマスターです"} />
-			<Description text={"現在の参加者は0人です"} />
-		</Root>
-	);
+const GameMasterPage: React.FC = () => {
+	return <GameMaster />;
 };
-export default GameMaster;
-
-const Root = styled("div")(({ theme: _ }) => ({
-	alignItems: "center",
-	display: "flex",
-	gap: 64,
-	flexFlow: "column",
-	height: "100%",
-	justifyContent: "center",
-}));
+export default GameMasterPage;
