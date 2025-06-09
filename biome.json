@@ -21,7 +21,8 @@
 			"style": {
 				"useNodejsImportProtocol": "off",
 				"noInferrableTypes": "off",
-				"noNonNullAssertion": "off"
+				"noNonNullAssertion": "off",
+				"useEnumInitializers": "off"
 			},
 			"suspicious": {
 				"noExplicitAny": "off"
