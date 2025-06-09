@@ -6,7 +6,7 @@ export async function GET() {
     console.log('ゲームを開始します。');
 
     // 回答者に通知
-    (await wsRepository).sendMessage({
+    wsRepository.sendMessage({
         to: 'respondent',
         payload: {
             type: 'start_game',
@@ -15,7 +15,7 @@ export async function GET() {
     });
 
     // ゲームマスターに通知
-    (await wsRepository).sendMessage({
+    wsRepository.sendMessage({
         to: 'game_master',
         payload: {
             type: 'start_game',
