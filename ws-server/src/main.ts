@@ -2,63 +2,80 @@
  * WebSocketサーバーの実装
  * ブラウザ通知用
  */
-import { createServer } from "http";
-import { Server, Socket, type DefaultEventsMap } from "socket.io";
-import { ClientType, type InternalMessage } from "./types.ts";
+import express from 'express';
+import { createServer } from 'http';
+import { WebSocketServer, WebSocket } from 'ws';
+import { ClientType, type InternalMessage } from './types.ts';
 
-// HTTPサーバーを作成
-const httpServer = createServer();
+const app = express();
+const server = createServer(app);
 
-// Socket.IOサーバーを作成
-const io = new Server(httpServer, {
-    cors: {
-        origin: "*", // 必要に応じて許可するオリジンを指定
-    },
-    transports: ['websocket'], // WebSocketのみを使用
+// wsサーバーをnoServerモードで作成
+const wss = new WebSocketServer({ noServer: true });
+
+const wsClientList: Map<ClientType, WebSocket> = new Map();
+
+// HTTPアップグレード時にエンドポイントを判別
+server.on('upgrade', (request, socket, head) => {
+    const { url } = request;
+    if (url === '/client') {
+        wss.handleUpgrade(request, socket, head, (ws) => {
+            handleClient(ws);
+        });
+    } else if (url === '/internal') {
+        wss.handleUpgrade(request, socket, head, (ws) => {
+            handleInternal(ws);
+        });
+    } else {
+        socket.destroy();
+    }
 });
 
-// クライアント接続を管理するリスト
-const wsClientList: Map<ClientType, Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>> = new Map();
-
-// クライアント通知用エンドポイント
-const client = io.of('/client');
-client.on('connection', (socket) => {
-    console.log('client connected');
-    // クライアントの種類を識別するためのイベントを受信
-    socket.on('register', (clientType: ClientType) => {
-        if (wsClientList.has(clientType)) {
-            console.log(`Client of type ${clientType} is already connected.`);
-            return;
-        }
-        wsClientList.set(clientType, socket);
-        console.log(`Client registered: ${clientType}`);
+// エンドポイントごとの処理
+function handleClient(ws: WebSocket) {
+    ws.on("open", () => {
+        console.log('Client connection opened');
     });
-});
+    ws.on('message', (data) => {
+        const jsonData = JSON.parse(data.toString());
+        console.log('Received from client:', jsonData);
+        if (jsonData.action === 'register') {
+            const clientType = jsonData.clientType as ClientType;
+            if (wsClientList.has(clientType)) {
+                console.log(`Client of type ${clientType} is already connected.`);
+                return;
+            }
+            wsClientList.set(clientType, ws);
+            console.log(`Client registered: ${clientType}`);
+        }
+    });
+}
 
-// 内部通信用エンドポイント
-const notify = io.of('/internal');
-notify.on('connection', (socket) => {
-    console.log('internal connected');
-    socket.on('message', (msg: InternalMessage) => {
-        console.log("msg.to == ClientType.RESPONDENT", msg.to == ClientType.RESPONDENT);
-        console.log("msg.to == ClientType.GAME_MASTER", msg.to == ClientType.GAME_MASTER);
-        if (msg.to == ClientType.RESPONDENT) {
+function handleInternal(ws: WebSocket) {
+    ws.on("open", () => {
+        console.log('Internal connection opened');
+        ws.send("Internal connection established");
+    });
+    ws.on('message', (data) => {
+        const jsonData = JSON.parse(data.toString()) as InternalMessage;
+        console.log('Received from internal:', jsonData);
+        // どっちの分岐に入るか確認
+        if (jsonData.to == ClientType.RESPONDENT) {
+            console.log(`Sending to: ${jsonData.to}`);
             const respondentClient = wsClientList.get(ClientType.RESPONDENT);
             if (respondentClient) {
-                respondentClient.emit('message', msg);
+                respondentClient.send(JSON.stringify(jsonData.payload));
             }
         } else {
+            console.log(`Sending to: ${jsonData.to}`);
             const gameMasterClient = wsClientList.get(ClientType.GAME_MASTER);
             if (gameMasterClient) {
-                gameMasterClient.emit('message', msg);
+                gameMasterClient.send(JSON.stringify(jsonData.payload));
             }
         }
-        console.log('message received:', msg);
     });
-});
+}
 
-// サーバー起動
-const PORT = 3010;
-httpServer.listen(PORT, () => {
-    console.log(`WebSocketサーバー起動: http://localhost:${PORT}`);
+server.listen(3010, () => {
+    console.log('Server is running on port 3010');
 });
