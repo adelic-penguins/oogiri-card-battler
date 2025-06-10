@@ -1,15 +1,25 @@
 "use client";
 
-import type React from "react";
+import React, {useEffect} from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Button from "@/app/components/common/Button";
 import { useRouter } from "next/navigation";
 import {useLocalStorage} from "@/app/hooks/useLocalStorage";
+import {useUuid} from "@/app/hooks/useUuid";
 
-const Top: React.FC<{ clientId?: string; }> = (props) => {
+const Top: React.FC = () => {
 	const router = useRouter();
-	const [clientId, setClientId] = useLocalStorage("clientId", props.clientId);
+	const [clientId, setClientId] = useLocalStorage("clientId");
+	// uuidの取得
+	const uuid = useUuid();
+
+	useEffect(() => {
+		if(!clientId) {
+			setClientId(uuid);
+		}
+	}, [uuid]);
+
 	return (
 		<Root>
 			<Title text={"大喜利カードバトラー"} />

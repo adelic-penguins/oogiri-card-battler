@@ -5,15 +5,15 @@ import { useState, useEffect } from 'react';
  * @param key - LocalStorageのキー
  * @param initialValue - 初期値
  */
-export const useLocalStorage = (key: string, initialValue?: string) => {
+export const useLocalStorage = (key: string) => {
     const [storedValue, setStoredValue] = useState(() => {
         try {
             const item = window.localStorage.getItem(key);
             console.debug("[Next Server]: Stored key/value is " + `${key}/${item}`);
-            return item ? item : initialValue;
+            return item;
         } catch (error) {
             console.error(`Error reading localStorage key "${key}":`, error);
-            return initialValue;
+            return null;
         }
     });
 
@@ -31,13 +31,13 @@ export const useLocalStorage = (key: string, initialValue?: string) => {
     useEffect(() => {
         const handleStorageChange = (event: StorageEvent) => {
             if (event.key === key) {
-                setStoredValue(event.newValue ? event.newValue : initialValue);
+                setStoredValue(event.newValue);
                 console.debug("[Next Server]: Storage event detected for key " + key + ", new value: " + event.newValue);
             }
         };
         window.addEventListener('storage', handleStorageChange);
         return () => window.removeEventListener('storage', handleStorageChange);
-    }, [key, initialValue]);
+    }, [key]);
 
     return [storedValue, setValue] as const;
 }

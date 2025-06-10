@@ -5,13 +5,11 @@ import {useLocalStorage} from "@/app/hooks/useLocalStorage";
  * uuidを生成するカスタムフック
  */
 export const useUuid = () => {
-  const [uuid, setUuid] = useState<string>();
+  const [uuid, setUuid] = useState<string>(crypto.randomUUID());
 
   useEffect(() => {
-    const newUuid = crypto.randomUUID();
-    setUuid(newUuid);
-    console.debug("[Next Server]: New UUID generated.", newUuid);
-  }, []);
+    console.debug("[Next Server]: New UUID generated.", uuid);
+  }, [uuid]);
 
   return uuid;
 };
