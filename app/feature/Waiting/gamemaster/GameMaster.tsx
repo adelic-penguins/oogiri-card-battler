@@ -8,11 +8,13 @@ import useFetch from "@/app/hooks/useFetch";
 import {useWebSocket} from "@/app/hooks/useWebSocket";
 import {ClientMessage, ClientType} from "@/app/api/types/types";
 import Button from "@/app/components/common/Button";
+import {useLocalStorage} from "@/app/hooks/useLocalStorage";
 
 const GameMaster: React.FC = () => {
 
 	const { fetchJoinAsGameMaster, fetchGameStart } = useFetch();
-	const { messageState, close } = useWebSocket(ClientType.GAME_MASTER);
+	const [clientId, setClientId] = useLocalStorage("clientId");
+	const { messageState, close } = useWebSocket(ClientType.GAME_MASTER, clientId);
 
 	useEffect(() => {
 		fetchJoinAsGameMaster();

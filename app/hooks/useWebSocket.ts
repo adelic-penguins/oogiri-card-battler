@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {ClientMessage, ClientType} from "@/app/api/types/types";
 
-export function useWebSocket(clientType: ClientType, callback?: (data: ClientMessage) => void) {
+export function useWebSocket(clientType: ClientType, clientId?: string, callback?: (data: ClientMessage) => void) {
     const [messageState, setMessageState] = useState<ClientMessage>();
     const [close, setClose] = useState<() => void>(() => () => {});
 
@@ -26,7 +26,8 @@ export function useWebSocket(clientType: ClientType, callback?: (data: ClientMes
 
         ws.addEventListener("open", () => {
             console.log('[Browser]: WebSocket connection established');
-            ws.send(JSON.stringify({ action: 'register', clientType }));
+            ws.send(JSON.stringify({ action: 'register', clientType, clientId }));
+            console.debug('[Browser]: WebSocket sent registration message', { clientType, clientId });
         });
     }, []);
 

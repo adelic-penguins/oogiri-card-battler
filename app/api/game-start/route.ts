@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { clientList } from '../stateStore/ClientsState';
 import wsRepository from '../repositories/WsRepository';
 
 export async function GET() {
