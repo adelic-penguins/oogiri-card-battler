@@ -149,6 +149,7 @@ wss.on("close", () => {
     clearInterval(pingInterval);
     wss.close();
     server.close();
+    process.exit(0);
 })
 
 server.listen(3010, () => {
