@@ -7,7 +7,7 @@ services:
       dockerfile: deployment/staging/docker/next/Dockerfile
     container_name: ocb-nextjs
     ports:
-      - "3000:3000"
+      - "4000:3000"
     environment:
       - ENV=staging
     depends_on:
@@ -20,7 +20,7 @@ services:
       dockerfile: deployment/staging/docker/ws-server/Dockerfile
     container_name: ocb-ws-server
     ports:
-      - "3010:3010"
+      - "4010:3010"
 
   ocb-json-server:
     build:
@@ -28,7 +28,7 @@ services:
       dockerfile: deployment/staging/docker/json-server/Dockerfile
     container_name: ocb-json-server
     ports:
-      - "3020:3020"
+      - "4020:3020"
 
 volumes:
   db_data:
