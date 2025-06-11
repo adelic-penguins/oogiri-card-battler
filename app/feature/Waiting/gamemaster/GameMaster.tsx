@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Description from "@/app/components/common/Description";

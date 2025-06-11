@@ -1,10 +1,9 @@
 "use client";
 
-import type React from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import Description from "@/app/components/common/Description";
 
 const Player: React.FC = () => {
