@@ -12,6 +12,7 @@ type ClientMessage = {
 type InternalMessage = {
     to: ClientType; // 送信先のクライアントタイプ
     payload: ClientMessage; // 送信するメッセージの内容
+    clientId: string; // オプションのクライアントID
 };
 
 

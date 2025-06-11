@@ -20,7 +20,7 @@ const Player: React.FC = () => {
 			}
 		}
 	},[]);
-	const { messageState } = useWebSocket(ClientType.RESPONDENT, handleChangeWs);
+	const { messageState } = useWebSocket(ClientType.RESPONDENT, undefined, handleChangeWs);
 	useEffect(() => {
 		fetchJoinAsResponder();
 	}, []);

@@ -3,26 +3,34 @@ import { useState, useEffect } from 'react';
 /**
  * LocalStorageを操作するカスタムフック
  * @param key - LocalStorageのキー
- * @param initialValue - 初期値
  */
 export const useLocalStorage = (key: string) => {
-    const [storedValue, setStoredValue] = useState(() => {
+    const [storedValue, setStoredValue] = useState<string | null>(() => {
+        // デバッグのため実行環境の確認
+        console.debug("[Next Server]: useLocalStorage called with key: " + key);
         try {
-            const item = window.localStorage.getItem(key);
-            console.debug("[Next Server]: Stored key/value is " + `${key}/${item}`);
-            return item;
+            const localStorage = getLocalStorage();
+            if  (localStorage) {
+                const item = localStorage.getItem(key);
+                console.debug("[Next Server]: Stored key/value is " + `${key}/${item}`);
+                return item;
+            }
+            return null;
         } catch (error) {
             console.error(`Error reading localStorage key "${key}":`, error);
-            return null;
+            return 'Client id not found';
         }
     });
 
     const setValue = (value: string) => {
         try {
-            const valueToStore = value;
-            setStoredValue(valueToStore);
-            window.localStorage.setItem(key, String(valueToStore));
-            console.debug("[Next Server]: Set localStorage key/value is " + `${key}/${valueToStore}`);
+            const localStorage = getLocalStorage();
+            if (localStorage) {
+                const valueToStore = value;
+                setStoredValue(valueToStore);
+                localStorage.setItem(key, String(valueToStore));
+                console.debug("[Next Server]: Set localStorage key/value is " + `${key}/${valueToStore}`);
+            }
         } catch (error) {
             console.error(`Error setting localStorage key "${key}":`, error);
         }
@@ -31,7 +39,7 @@ export const useLocalStorage = (key: string) => {
     useEffect(() => {
         const handleStorageChange = (event: StorageEvent) => {
             if (event.key === key) {
-                setStoredValue(event.newValue);
+                setStoredValue(event.newValue ?? 'Client id not found');
                 console.debug("[Next Server]: Storage event detected for key " + key + ", new value: " + event.newValue);
             }
         };
@@ -40,4 +48,12 @@ export const useLocalStorage = (key: string) => {
     }, [key]);
 
     return [storedValue, setValue] as const;
+}
+
+function getLocalStorage() {
+    if (typeof window === 'undefined') {
+        console.debug('useLocalStorage can only be used in a browser environment');
+    } else {
+        return window.localStorage;
+    }
 }

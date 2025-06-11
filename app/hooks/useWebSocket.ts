@@ -9,8 +9,8 @@ export function useWebSocket(clientType: ClientType, clientId?: string, callback
         const ws = new WebSocket('http://localhost:3010/client');
 
         ws.addEventListener("message", (ev: MessageEvent<any>) => {
-            console.log(ev.data);
             const data = JSON.parse(ev.data) as ClientMessage;
+            console.debug("[Browser] Message recived from WebSocket server.", data);
             setMessageState(data);
             if (callback) {
                 callback(data);

@@ -21,6 +21,7 @@ type WebSocketClient = {
 };
 
 let wsClientList: Array<WebSocketClient> = [];
+let internalClient: WebSocket | null = null;
 
 // HTTPアップグレード時にエンドポイントを判別
 server.on('upgrade', (request, socket, head) => {
@@ -78,8 +79,22 @@ function handleClient(ws: WebSocket) {
 
     ws.on('close', () => {
         console.debug('[WebSocket Server]: Client connection closed');
+
         // クライアントの切断時にマップから削除
         deleteClient(ws);
+
+        // クライアントの離脱をサーバーに通知
+        if(internalClient) {
+            const clientId = wsClientList.find(client => client.ws === ws)?.clientId;
+            if (clientId) {
+                const message = {
+                    message: `client_disconnected`,
+                    clientId: clientId,
+                };
+                internalClient.send(JSON.stringify(message));
+                console.debug(`[WebSocket Server]: Notified game master of client disconnection: ${clientId}`);
+            }
+        }
     });
 }
 
@@ -90,20 +105,22 @@ function deleteClient(ws: WebSocket) {
 }
 
 const pingInterval = setInterval(() => {
-    for (const client of wsClientList.values()) {
-        if (!client.isAlive) {
-            client.ws.terminate();
-            // deleteClient(client.ws);
-            continue;
-        }
-        client.isAlive = false;
-        client.ws.ping(() => {
-            console.debug(`[WebSocket Server]: Ping sent to client`);
+    wsClientList.forEach(client => {
+        setImmediate(() => {
+            if (!client.isAlive) {
+                client.ws.terminate();
+                return;
+            }
+            client.isAlive = false;
+            client.ws.ping(() => {
+                console.debug(`[WebSocket Server]: Ping sent to client`);
+            });
         });
-    }
+    });
 }, 3000);
 
 function handleInternal(ws: WebSocket) {
+    internalClient = ws; // 内部クライアントを保存
     ws.on("open", () => {
         console.debug('[WebSocket Server]: Internal connection opened');
         ws.send("Internal connection established");

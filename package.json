@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "run-p dev:next dev:ws-server",
+    "dev": "run-p dev:next dev:ws-server dev:json-server",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "format": "biome format . --write",
     "dev:next": "next dev",
-    "dev:ws-server": "cd ws-server && npm run dev"
+    "dev:ws-server": "cd ws-server && npm run dev",
+    "dev:json-server": "npx json-server db.json --port 3020"
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -19,6 +20,7 @@
     "@types/ws": "^8.18.1",
     "bufferutil": "^4.0.9",
     "cors": "^2.8.5",
+    "json-server": "^1.0.0-beta.3",
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

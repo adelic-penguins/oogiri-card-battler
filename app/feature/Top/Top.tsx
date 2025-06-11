@@ -8,17 +8,15 @@ import { useRouter } from "next/navigation";
 import {useLocalStorage} from "@/app/hooks/useLocalStorage";
 import {useUuid} from "@/app/hooks/useUuid";
 
-const Top: React.FC = () => {
+const Top: React.FC<{ clientId: string }> = (props) => {
 	const router = useRouter();
 	const [clientId, setClientId] = useLocalStorage("clientId");
-	// uuidの取得
-	const uuid = useUuid();
 
 	useEffect(() => {
 		if(!clientId) {
-			setClientId(uuid);
+			setClientId(props.clientId);
 		}
-	}, [uuid]);
+	}, [props.clientId]);
 
 	return (
 		<Root>

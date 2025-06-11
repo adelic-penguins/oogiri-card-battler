@@ -14,7 +14,7 @@ const GameMaster: React.FC = () => {
 
 	const { fetchJoinAsGameMaster, fetchGameStart } = useFetch();
 	const [clientId, setClientId] = useLocalStorage("clientId");
-	const { messageState, close } = useWebSocket(ClientType.GAME_MASTER, clientId);
+	const { messageState, close } = useWebSocket(ClientType.GAME_MASTER, clientId ?? "Client id is note set");
 
 	useEffect(() => {
 		fetchJoinAsGameMaster();
