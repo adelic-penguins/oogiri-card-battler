@@ -1,47 +1,51 @@
 import { InternalMessage } from "../types/types";
-import { io, Socket } from "socket.io-client";
+import WebSocket from "ws";
 
 class WsRepository {
     private static instance: WsRepository;
-    private static wsEndpoint: string = 'http://localhost:3010/internal';
-    socket: Socket | null = null;
+    socket: WebSocket | null = null;
+    static wsEndpoint: string = 'ws://localhost:3010/internal';
 
-    private constructor(socket: Socket) {
-        // websocket初期化
-        this.socket = socket;
+    private constructor(webSocket: WebSocket) {
+        this.socket = webSocket;
+
+        this.socket.onmessage = (event) => {
+            console.log('Received message:', event.data);
+        };
+
+        this.socket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
     }
 
     public static async getInstance(): Promise<WsRepository> {
-        const wsInit = new Promise<Socket>((resolve, reject) => {
-            const socket = io(WsRepository.wsEndpoint, {
-                transports: ['websocket'],
-            });
-            socket.on('connect', () => {
-                console.log('WebSocket connected');
-                resolve(socket);
-            });
-            // 接続エラー
-            socket.on('connect_error', (err) => {
-                console.error('接続エラー:', err);
-                reject(err);
-                // 必要に応じてリトライやUI通知
-            });
-        });
-        const socket = await wsInit;
         if (!WsRepository.instance) {
+            // websocket初期化
+            const wsInit = new Promise<WebSocket>((resolve, reject) => {
+                const socket = new WebSocket(this.wsEndpoint);
+
+                socket.onopen = () => {
+                    console.log('WebSocket initialized:', this.wsEndpoint);
+                    resolve(socket);
+                };
+
+                socket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    reject(error);
+                };
+            });
+            const socket = await wsInit;
             WsRepository.instance = new WsRepository(socket);
         }
         return WsRepository.instance;
     }
 
     public sendMessage(data: InternalMessage) {
-        if (this.socket) {
-            if (this.socket.connected) {
-                this.socket.emit('message', data);
-                console.log('Sending message:', data);
-            } else {
-                console.error('WebSocket is not initialized.');
-            }
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            console.log('Sending message:', data);
+            this.socket.send(JSON.stringify(data));
+        } else {
+            console.error('WebSocket is not initialized or not open.');
         }
     }
 }
