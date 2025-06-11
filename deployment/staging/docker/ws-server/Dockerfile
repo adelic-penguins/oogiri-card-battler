@@ -18,13 +18,9 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY ws-server .
-
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN npm run build;
+RUN npm run build
+RUN ls -al
+RUN pwd
 
 # Production image, copy all the files and run next
 
@@ -35,8 +31,10 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY ./ws-server .
-COPY --from=builder . .
+COPY ws-server .
+COPY --from=builder /app .
+RUN ls -al
+RUN pwd
 
 USER nextjs
 
