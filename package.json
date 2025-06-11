@@ -1,39 +1,40 @@
 {
-	"name": "oogiri-card-battler",
-	"version": "0.1.0",
-	"private": true,
-	"scripts": {
-		"dev": "run-p dev:next dev:ws-server",
-		"build": "next build",
-		"start": "next start",
-		"lint": "next lint",
-		"format": "biome format . --write",
-		"dev:next": "next dev",
-		"dev:ws-server": "cd ws-server && npm run dev"
-	},
-	"dependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"@emotion/react": "^11.14.0",
-		"@emotion/styled": "^11.14.0",
-		"@mui/system": "^7.1.1",
-		"@types/ws": "^8.18.1",
-		"bufferutil": "^4.0.9",
-		"cors": "^2.8.5",
-		"next": "15.3.3",
-		"react": "^19.0.0",
-		"react-dom": "^19.0.0",
-		"socket.io": "^4.8.1",
-		"socket.io-client": "^4.8.1",
-		"ws": "^8.18.2"
-	},
-	"devDependencies": {
-		"@types/node": "^20",
-		"@types/react": "^19",
-		"@types/react-dom": "^19",
-		"npm-run-all": "^4.1.5",
-		"typescript": "^5"
-	},
-	"volta": {
-		"node": "24.1.0"
-	}
+  "name": "oogiri-card-battler",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "run-p dev:next dev:ws-server",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "biome format . --write",
+    "dev:next": "next dev",
+    "dev:ws-server": "cd ws-server && npm run dev"
+  },
+  "dependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/system": "^7.1.1",
+    "@types/ws": "^8.18.1",
+    "bufferutil": "^4.0.9",
+    "cors": "^2.8.5",
+    "json-server": "^1.0.0-beta.3",
+    "next": "15.3.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "ws": "^8.18.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5"
+  },
+  "volta": {
+    "node": "24.1.0"
+  }
 }
