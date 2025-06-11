@@ -8,13 +8,13 @@ import Card from "@/app/components/card/Card";
 import { Phase } from "@/app/types/userState/card";
 
 type prop = {
-	selectedCardList: string[];
+	selectedCardSrcList: string[];
 	handleChangeCardState: (cardName: string, cardState: boolean) => void;
 	handleChangePhase: React.Dispatch<React.SetStateAction<Phase>>;
 };
 
 const CardUsagePhase: React.FC<prop> = ({
-	selectedCardList,
+	selectedCardSrcList,
 	handleChangeCardState,
 	handleChangePhase,
 }) => {
@@ -40,7 +40,7 @@ const CardUsagePhase: React.FC<prop> = ({
 				</Button>
 			</ButtonSection>
 			<SelectCardSection>
-				{selectedCardList.map((card) => {
+				{selectedCardSrcList.map((card) => {
 					return (
 						<Card
 							src={card}
@@ -60,7 +60,7 @@ export default CardUsagePhase;
 const Root = styled("div")(({ theme: _ }) => ({
 	alignItems: "center",
 	display: "flex",
-	gap: 64,
+	gap: 32,
 	flexFlow: "column",
 	height: "100%",
 	justifyContent: "center",
@@ -72,10 +72,8 @@ const ButtonSection = styled("div")(({ theme: _ }) => ({
 	gap: 24,
 }));
 const SelectCardSection = styled("div")(({ theme: _ }) => ({
-	bottom: 24,
 	display: "flex",
 	gap: 24,
 	justifyContent: "center",
-	position: "absolute",
 	width: "100%",
 }));

@@ -12,20 +12,26 @@ import useSelectedCard from "@/app/feature/Battle/player/hooks/useSelectedCard";
 import { Phase } from "@/app/types/userState/card";
 
 const Player: React.FC = () => {
-	const { selectedCardList, handleChangeCardState } = useSelectedCard();
+	const { selectedCardSrcList, selectedCardList, handleChangeCardState } =
+		useSelectedCard();
 	const [currentPhase, setCurrentPhase] = useState<Phase>(Phase.cardUsagePhase);
 	const currentPhaseComponent = (phase: Phase) => {
 		switch (phase) {
 			case Phase.cardUsagePhase:
 				return (
 					<CardUsagePhase
-						selectedCardList={selectedCardList}
+						selectedCardSrcList={selectedCardSrcList}
 						handleChangeCardState={handleChangeCardState}
 						handleChangePhase={setCurrentPhase}
 					/>
 				);
 			case Phase.abilityPhase:
-				return <AbilityPhase />;
+				return (
+					<AbilityPhase
+						selectedCardList={selectedCardList}
+						handleChangePhase={setCurrentPhase}
+					/>
+				);
 			case Phase.themeInputPhase:
 				return <ThemeInputPhase />;
 			case Phase.answerPhase:

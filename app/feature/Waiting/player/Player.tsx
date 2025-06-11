@@ -9,10 +9,10 @@ import Description from "@/app/components/common/Description";
 const Player: React.FC = () => {
 	const router = useRouter();
 	useEffect(() => {
-		const timer = setTimeout(() => {
+		const timeoutId = setTimeout(() => {
 			router.push("/battle/player");
 		}, 4000);
-		return () => clearTimeout(timer);
+		return () => clearTimeout(timeoutId);
 	}, [router]);
 	return (
 		<Root>

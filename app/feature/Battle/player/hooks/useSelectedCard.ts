@@ -5,7 +5,8 @@ import { CardListType } from "@/app/types/userState/card";
 import cardMock from "@/app/mock/card/card";
 
 const useSelectedCard = (): {
-	selectedCardList: string[];
+	selectedCardSrcList: string[];
+	selectedCardList: CardListType;
 	handleChangeCardState: (cardName: string, cardState: boolean) => void;
 } => {
 	// TODO: いつかカードをAPI経由で取ってきたい...いつか...
@@ -28,7 +29,8 @@ const useSelectedCard = (): {
 	}, [selectedCardState]);
 
 	return {
-		selectedCardList: selectedCardState.map((card) => card.src),
+		selectedCardSrcList: selectedCardState.map((card) => card.src),
+		selectedCardList: selectedCardState,
 		handleChangeCardState,
 	};
 };
