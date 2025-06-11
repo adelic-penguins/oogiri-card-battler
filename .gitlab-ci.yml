@@ -4,5 +4,5 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - cd deployment/staging/docker/docker-compose.yml
+    - cd deployment/staging/docker
     - docker compose up -d
