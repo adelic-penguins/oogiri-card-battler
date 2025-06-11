@@ -1,13 +1,3 @@
 {
-  "client_ids": [
-    {
-      "id": "f056e14b-0a00-4f3b-99d0-1d771b7f44ff"
-    },
-    {
-      "id": "f056e14b-0a00-4f3b-99d0-1d771b7f44ff"
-    },
-    {
-      "id": "b2fdf59e-f36e-4de5-a99d-726e5ec331e1"
-    }
-  ]
+  "client_ids": []
 }

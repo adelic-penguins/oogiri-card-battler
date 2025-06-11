@@ -27,7 +27,7 @@ export function useWebSocket(clientType: ClientType, clientId?: string, callback
         ws.addEventListener("open", () => {
             console.log('[Browser]: WebSocket connection established');
             ws.send(JSON.stringify({ action: 'register', clientType, clientId }));
-            console.debug('[Browser]: WebSocket sent registration message', { clientType, clientId });
+            console.debug('[Browser]: WebSocket sent registration message', { action: 'register', clientType, clientId });
         });
     }, []);
 

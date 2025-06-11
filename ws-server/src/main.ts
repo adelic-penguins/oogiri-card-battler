@@ -50,7 +50,7 @@ function handleClient(ws: WebSocket) {
     ws.on('message', (data) => {
         const jsonData = JSON.parse(data.toString());
         console.debug('[WebSocket Server]: Received from client:', jsonData);
-        if (jsonData.action === 'register') {
+        if (jsonData.action === 'register' && jsonData.clientId) {
             const clientType = jsonData.clientType as ClientType;
             if (wsClientList.map(e => e.clientId).indexOf(jsonData.clientId) !== -1) {
                 console.debug(`[WebSocket Server]: Client of type ${clientType} is already connected.`);
@@ -69,7 +69,7 @@ function handleClient(ws: WebSocket) {
 
     ws.on("pong", () => {
         console.debug('[WebSocket Server]: Received pong from client');
-        const client = wsClientList.find(client => client.ws === ws);
+        const client = wsClientList.find(client => client.ws == ws);
         if (client) {
             client.isAlive = true; // クライアントが生きていることを確認
         } else {
@@ -79,13 +79,11 @@ function handleClient(ws: WebSocket) {
 
     ws.on('close', () => {
         console.debug('[WebSocket Server]: Client connection closed');
-
-        // クライアントの切断時にマップから削除
-        deleteClient(ws);
+        const wsClient = wsClientList.find(client => client.ws == ws);
+        const clientId = wsClient?.clientId;
 
         // クライアントの離脱をサーバーに通知
         if(internalClient) {
-            const clientId = wsClientList.find(client => client.ws === ws)?.clientId;
             if (clientId) {
                 const message = {
                     message: `client_disconnected`,
@@ -95,11 +93,14 @@ function handleClient(ws: WebSocket) {
                 console.debug(`[WebSocket Server]: Notified game master of client disconnection: ${clientId}`);
             }
         }
+
+        // クライアントの切断時にマップから削除
+        deleteClient(ws);
     });
 }
 
 function deleteClient(ws: WebSocket) {
-    const wsClient = wsClientList.find(client => client.ws === ws);
+    const wsClient = wsClientList.find(client => client.ws == ws);
     wsClientList = wsClientList.filter(client => client.ws !== ws);
     console.debug(`[WebSocket Server]: Client of uuid ${wsClient?.clientId} deleted`);
 }
@@ -146,6 +147,8 @@ function handleInternal(ws: WebSocket) {
 
 wss.on("close", () => {
     clearInterval(pingInterval);
+    wss.close();
+    server.close();
 })
 
 server.listen(3010, () => {
