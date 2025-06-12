@@ -6,7 +6,7 @@ export function useWebSocket(clientType: ClientType, clientId?: string, callback
     const [close, setClose] = useState<() => void>(() => () => {});
 
     useEffect(() => {
-        const wsServerUrl = process.env.WS_SERVER_URL || 'http://localhost:3010';
+        const wsServerUrl = process.env.NEXT_PUBLIC_WS_SERVER_URL || 'http://localhost:3010';
         const ws = new WebSocket(`${wsServerUrl}/client`);
 
         ws.addEventListener("message", (ev: MessageEvent<any>) => {
