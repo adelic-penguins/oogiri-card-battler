@@ -5,7 +5,7 @@ const useFetch = () => {
 	 */
 	const fetchEvaluate = async (evaluate: string) => {
 		try {
-			await fetch(`/api/evaluate?evaluate=${evaluate}`);
+			await fetchBase(`/api/evaluate?evaluate=${evaluate}`);
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
@@ -15,7 +15,7 @@ const useFetch = () => {
 	 */
 	const fetchGameStart = async () => {
 		try {
-			await fetch("/api/game-start");
+			await fetchBase("/api/game-start");
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
@@ -27,7 +27,7 @@ const useFetch = () => {
 	 */
 	const fetchInputTheme = async (theme: string) => {
 		try {
-			await fetch(`/api/input-theme?theme=${theme}`);
+			await fetchBase(`/api/input-theme?theme=${theme}`);
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
@@ -38,7 +38,7 @@ const useFetch = () => {
 	 */
 	const fetchJoinAsGameMaster = async () => {
 		try {
-			await fetch("/api/join-as-game-master");
+			await fetchBase("/api/join-as-game-master");
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
@@ -49,7 +49,7 @@ const useFetch = () => {
 	 */
 	const fetchJoinAsResponder = async () => {
 		try {
-			await fetch("/api/join-as-responder");
+			await fetchBase("/api/join-as-responder");
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
@@ -61,7 +61,7 @@ const useFetch = () => {
 	 */
 	const fetchRespondTheme = async (answer: string) => {
 		try {
-			await fetch(`/api/respond-theme?answer=${answer}`);
+			await fetchBase(`/api/respond-theme?answer=${answer}`);
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
@@ -71,7 +71,7 @@ const useFetch = () => {
 	 */
 	const fetchSelectCard = async () => {
 		try {
-			await fetch("/api/select-card");
+			await fetchBase("/api/select-card");
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
@@ -87,5 +87,25 @@ const useFetch = () => {
 		fetchSelectCard,
 	};
 };
+
+function fetchBase(input: string | URL | globalThis.Request,
+				   init?: RequestInit) {
+	console.debug("[Browser]: Fetch request. ", input);
+	const clientId = window.localStorage.getItem("clientId") ?? "Client id not found in localStorage";
+	if (clientId === "Client id not found in localStorage") {
+		console.error("[Browser]: Client ID is not set in localStorage.");
+	} else {
+		console.debug("[Browser]: Client ID found in localStorage.", clientId);
+	}
+	// クライアントIDをリクエストヘッダーに追加
+	const newInit = init || {};
+	newInit.headers = {
+		...newInit.headers,
+		'X-Client-Id': clientId,
+	};
+	console.debug("[Browser]: Client ID added to request headers.", clientId);
+	console.debug("[Browser]: Fetch init.", newInit);
+	return fetch(input, newInit);
+}
 
 export default useFetch;
