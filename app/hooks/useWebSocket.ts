@@ -6,7 +6,8 @@ export function useWebSocket(clientType: ClientType, clientId?: string, callback
     const [close, setClose] = useState<() => void>(() => () => {});
 
     useEffect(() => {
-        const ws = new WebSocket('http://localhost:3010/client');
+        const wsServerUrl = process.env.WS_SERVER_URL || 'http://localhost:3010';
+        const ws = new WebSocket(`${wsServerUrl}/client`);
 
         ws.addEventListener("message", (ev: MessageEvent<any>) => {
             const data = JSON.parse(ev.data) as ClientMessage;

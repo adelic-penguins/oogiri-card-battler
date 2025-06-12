@@ -36,6 +36,8 @@ COPY --from=builder /app .
 RUN ls -al
 RUN pwd
 
+ENV NODE_ENV staging
+
 USER nextjs
 
 EXPOSE 3010

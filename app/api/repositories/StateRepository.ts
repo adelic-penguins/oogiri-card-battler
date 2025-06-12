@@ -15,7 +15,7 @@ type ClientIdsType = ClientIdType[];
 
 class ClientIdRepository {
     private static instance: ClientIdRepository;
-    private baseUrl: string = "http://localhost:3020";
+    private baseUrl: string = process.env.JSON_SERVER_URL || 'http://localhost:3020';
 
     private constructor() {
     }

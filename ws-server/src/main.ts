@@ -6,6 +6,9 @@ import express from 'express';
 import { createServer } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import { ClientType, type InternalMessage } from './types.ts';
+import {loadDotenv} from "./load_dotenv.ts";
+
+loadDotenv();
 
 const app = express();
 const server = createServer(app);
@@ -152,6 +155,7 @@ wss.on("close", () => {
     process.exit(0);
 })
 
-server.listen(3010, () => {
-    console.debug('[WebSocket Server]: Server is running on port 3010');
+const PORT = parseInt(process.env.PORT || "3010");
+server.listen(PORT, () => {
+    console.log(`[WebSocket Server]: Server is running on port ${PORT}`);
 });

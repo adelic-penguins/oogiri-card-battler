@@ -5,7 +5,7 @@ import stateRepository from "@/app/api/repositories/StateRepository";
 class WsRepository {
     private static instance: WsRepository;
     socket: WebSocket | null = null;
-    static wsEndpoint: string = 'ws://localhost:3010/internal';
+    static wsEndpoint: string = process.env.WS_SERVER_URL || 'http://localhost:3010';
 
     private constructor(webSocket: WebSocket) {
         this.socket = webSocket;
