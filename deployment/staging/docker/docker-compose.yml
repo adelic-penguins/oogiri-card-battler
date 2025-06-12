@@ -11,7 +11,7 @@ services:
     environment:
       - NODE_ENV=staging
       - WS_SERVER_URL=${STG_WS_SERVER_URL}
-      - JSON_SERVER_URL=${STG_WS_SERVER_URL}
+      - JSON_SERVER_URL=${STG_JSON_SERVER_URL}
     depends_on:
       - ocb-ws-server
       - ocb-json-server
