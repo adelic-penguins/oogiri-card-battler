@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect} from "react";
+import React from "react";
 import CardUsagePhase from "@/app/feature/Battle/player/components/CardUsagePhase";
 import AbilityPhase from "@/app/feature/Battle/player/components/AbilityPhase";
 import ThemeInputPhase from "@/app/feature/Battle/player/components/ThemeInputPhase";
@@ -9,11 +9,11 @@ import EvaluationPhase from "@/app/feature/Battle/player/components/EvaluationPh
 import EvaluationResultPhase from "@/app/feature/Battle/player/components/EvaluationResultPhase";
 import GameEndPhase from "@/app/feature/Battle/player/components/GameEndPhase";
 import { Phase } from "@/app/types/userState/card";
-import {useAtom} from "jotai";
-import {currentPhaseAtom, selectedCardListAtom} from "@/app/state/jotai/atoms";
+import {useAtomValue} from "jotai";
+import {currentPhaseAtom} from "@/app/state/jotai/atoms";
 
 const Player: React.FC = () => {
-	const [currentPhase, setCurrentPhase] = useAtom(currentPhaseAtom);
+	const currentPhase = useAtomValue(currentPhaseAtom);
 
 	const currentPhaseComponent = (phase: Phase) => {
 		switch (phase) {

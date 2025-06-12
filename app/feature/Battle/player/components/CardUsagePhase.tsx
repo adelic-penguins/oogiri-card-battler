@@ -6,7 +6,7 @@ import Title from "@/app/components/common/Title";
 import Button from "@/app/components/common/Button";
 import Card from "@/app/components/card/Card";
 import { Phase } from "@/app/types/userState/card";
-import {useAtom} from "jotai";
+import {useAtomValue, useSetAtom} from "jotai";
 import {
 	currentPhaseAtom,
 	handleChangeCardStateAtom,
@@ -16,8 +16,8 @@ import {useAtomCallback} from "jotai/utils";
 
 
 const CardUsagePhase: React.FC = () => {
-	const [currentPhase, setCurrentPhase] = useAtom(currentPhaseAtom);
-	const [selectedCardList, setSelectedCardList] = useAtom(selectedCardListAtom);
+	const setCurrentPhase = useSetAtom(currentPhaseAtom);
+	const selectedCardList = useAtomValue(selectedCardListAtom);
 	const handleChangeCardState = useAtomCallback(useCallback(handleChangeCardStateAtom, []));
 	return (
 		<Root>
