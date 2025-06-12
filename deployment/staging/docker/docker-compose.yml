@@ -5,6 +5,8 @@ services:
     build:
       context: ../../../
       dockerfile: deployment/staging/docker/next/Dockerfile
+      args:
+        - NEXT_PUBLIC_WS_SERVER_URL=${STG_WS_SERVER_URL}
     container_name: ocb-nextjs
     ports:
       - "4000:3000"
@@ -12,7 +14,6 @@ services:
       - NODE_ENV=staging
       - WS_SERVER_URL=${STG_WS_SERVER_URL}
       - JSON_SERVER_URL=${STG_JSON_SERVER_URL}
-      - NEXT_PUBLIC_WS_SERVER_URL=${STG_WS_SERVER_URL}
     depends_on:
       - ocb-ws-server
       - ocb-json-server

@@ -22,11 +22,13 @@ RUN \
 
 # Rebuild the source code only when needed
 FROM base AS builder
+ARG NEXT_PUBLIC_WS_SERVER_URL
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NODE_ENV=staging
+ENV NEXT_PUBLIC_WS_SERVER_URL=${NEXT_PUBLIC_WS_SERVER_URL}
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
