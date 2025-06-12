@@ -1,6 +1,6 @@
 import React from "react";
 
 const ThemeInputPhase: React.FC = () => {
-	return <div>{/* ここにJSX書く */}</div>;
+	return <div>お題回答</div>;
 };
 export default ThemeInputPhase;

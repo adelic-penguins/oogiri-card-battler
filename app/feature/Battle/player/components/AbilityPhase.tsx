@@ -3,27 +3,38 @@
 import React, { useEffect } from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
+import Card from "@/app/components/card/Card";
+import useAbilityPhase from "@/app/feature/Battle/player/hooks/useAbilityPhase";
 import { Phase, CardListType } from "@/app/types/userState/card";
 
 type prop = {
-	selectedCardList: CardListType;
+	cardStateList: CardListType;
 	handleChangePhase: React.Dispatch<React.SetStateAction<Phase>>;
 };
-
-const AbilityPhase: React.FC<prop> = ({
-	selectedCardList,
-	handleChangePhase,
-}) => {
+const AbilityPhase: React.FC<prop> = ({ cardStateList, handleChangePhase }) => {
+	const activationAbilityCard = useAbilityPhase(
+		cardStateList,
+		handleChangePhase,
+	);
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			handleChangePhase(Phase.themeInputPhase);
 		}, 4000);
 		return () => clearTimeout(timeoutId);
 	});
-	console.log(selectedCardList);
 	return (
 		<Root>
 			<Title text={"能力発動！"} />
+			<ActivationAbilityArea>
+				{!!activationAbilityCard && (
+					<Card
+						src={activationAbilityCard.src}
+						alt={activationAbilityCard.src}
+						cardName={activationAbilityCard.cardName}
+						key={activationAbilityCard.src}
+					/>
+				)}
+			</ActivationAbilityArea>
 		</Root>
 	);
 };
@@ -38,11 +49,6 @@ const Root = styled("div")(({ theme: _ }) => ({
 	justifyContent: "center",
 	position: "relative",
 }));
-const SelectCardSection = styled("div")(({ theme: _ }) => ({
-	bottom: 24,
-	display: "flex",
-	gap: 24,
-	justifyContent: "center",
-	position: "absolute",
-	width: "100%",
+const ActivationAbilityArea = styled("div")(({ theme: _ }) => ({
+	width: 100,
 }));

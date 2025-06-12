@@ -8,13 +8,13 @@ import Card from "@/app/components/card/Card";
 import { Phase } from "@/app/types/userState/card";
 
 type prop = {
-	selectedCardSrcList: string[];
+	cardSrcList: string[];
 	handleChangeCardState: (cardName: string, cardState: boolean) => void;
 	handleChangePhase: React.Dispatch<React.SetStateAction<Phase>>;
 };
 
 const CardUsagePhase: React.FC<prop> = ({
-	selectedCardSrcList,
+	cardSrcList,
 	handleChangeCardState,
 	handleChangePhase,
 }) => {
@@ -40,7 +40,7 @@ const CardUsagePhase: React.FC<prop> = ({
 				</Button>
 			</ButtonSection>
 			<SelectCardSection>
-				{selectedCardSrcList.map((card) => {
+				{cardSrcList.map((card) => {
 					return (
 						<Card
 							src={card}
