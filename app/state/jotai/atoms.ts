@@ -20,4 +20,8 @@ export const handleChangeCardStateAtom = (
 	});
 };
 
+// 回答内容
 export const answerAtom = atom<string>("");
+
+// 合計得点
+export const totalPointAtom = atom<number>(0);

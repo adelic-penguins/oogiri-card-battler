@@ -8,7 +8,7 @@ import { currentPhaseAtom, cardListAtom } from "@/app/state/jotai/atoms";
 const useAbilityPhase = (): CardType | null => {
 	const setCurrentPhase = useSetAtom(currentPhaseAtom);
 	const [activationAbilityQueue, setActivationAbilityQueue] = useState(
-		useAtomValue(cardListAtom),
+		useAtomValue(cardListAtom).filter((card) => card.selected),
 	);
 
 	useEffect(() => {
@@ -17,11 +17,11 @@ const useAbilityPhase = (): CardType | null => {
 			return;
 		}
 
-		const timer = setTimeout(() => {
+		const timeoutId = setTimeout(() => {
 			setActivationAbilityQueue((prev) => structuredClone(prev.slice(1)));
 		}, 5000);
 
-		return () => clearTimeout(timer);
+		return () => clearTimeout(timeoutId);
 	}, [activationAbilityQueue, setCurrentPhase]);
 
 	return activationAbilityQueue[0] ?? null;
