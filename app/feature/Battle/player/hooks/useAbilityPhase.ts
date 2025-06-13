@@ -1,19 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Phase, CardListType, CardType } from "@/app/types/userState/card";
+import { Phase, CardType } from "@/app/types/userState/card";
+import { useAtomValue, useSetAtom } from "jotai";
+import { currentPhaseAtom, cardListAtom } from "@/app/state/jotai/atoms";
 
-const useAbilityPhase = (
-	cardStateList: CardListType,
-	handleChangePhase: React.Dispatch<React.SetStateAction<Phase>>,
-): CardType | null => {
+const useAbilityPhase = (): CardType | null => {
+	const setCurrentPhase = useSetAtom(currentPhaseAtom);
 	const [activationAbilityQueue, setActivationAbilityQueue] = useState(
-		cardStateList.filter((card) => card.selected),
+		useAtomValue(cardListAtom),
 	);
 
 	useEffect(() => {
 		if (activationAbilityQueue.length === 0) {
-			handleChangePhase(Phase.themeInputPhase);
+			setCurrentPhase(Phase.themeInputPhase);
 			return;
 		}
 
@@ -22,7 +22,7 @@ const useAbilityPhase = (
 		}, 5000);
 
 		return () => clearTimeout(timer);
-	}, [activationAbilityQueue, handleChangePhase]);
+	}, [activationAbilityQueue, setCurrentPhase]);
 
 	return activationAbilityQueue[0] ?? null;
 };

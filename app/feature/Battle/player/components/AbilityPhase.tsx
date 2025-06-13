@@ -1,31 +1,23 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Card from "@/app/components/card/Card";
 import useAbilityPhase from "@/app/feature/Battle/player/hooks/useAbilityPhase";
-import { Phase, CardListType } from "@/app/types/userState/card";
 
-type prop = {
-	cardStateList: CardListType;
-	handleChangePhase: React.Dispatch<React.SetStateAction<Phase>>;
-};
-const AbilityPhase: React.FC<prop> = ({ cardStateList, handleChangePhase }) => {
-	const activationAbilityCard = useAbilityPhase(
-		cardStateList,
-		handleChangePhase,
-	);
+const AbilityPhase: React.FC = () => {
+	const card = useAbilityPhase();
 	return (
 		<Root>
 			<Title text={"能力発動！"} />
 			<ActivationAbilityArea>
-				{!!activationAbilityCard && (
+				{!!card && (
 					<Card
-						src={activationAbilityCard.src}
-						alt={activationAbilityCard.src}
-						cardName={activationAbilityCard.cardName}
-						key={activationAbilityCard.src}
+						src={card.src}
+						alt={card.src}
+						cardName={card.cardName}
+						key={card.src}
 					/>
 				)}
 			</ActivationAbilityArea>

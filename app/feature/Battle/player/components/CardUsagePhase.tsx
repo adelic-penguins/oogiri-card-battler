@@ -10,13 +10,13 @@ import { useAtomValue, useSetAtom } from "jotai";
 import {
 	currentPhaseAtom,
 	handleChangeCardStateAtom,
-	selectedCardListAtom,
+	cardListAtom,
 } from "@/app/state/jotai/atoms";
 import { useAtomCallback } from "jotai/utils";
 
 const CardUsagePhase: React.FC = () => {
 	const setCurrentPhase = useSetAtom(currentPhaseAtom);
-	const selectedCardList = useAtomValue(selectedCardListAtom);
+	const cardList = useAtomValue(cardListAtom);
 	const handleChangeCardState = useAtomCallback(
 		useCallback(handleChangeCardStateAtom, []),
 	);
@@ -42,7 +42,7 @@ const CardUsagePhase: React.FC = () => {
 				</Button>
 			</ButtonSection>
 			<SelectCardSection>
-				{selectedCardList
+				{cardList
 					.map((card) => card.src)
 					.map((card) => {
 						return (

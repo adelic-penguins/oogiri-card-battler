@@ -20,12 +20,7 @@ const Player: React.FC = () => {
 			case Phase.cardUsagePhase:
 				return <CardUsagePhase />;
 			case Phase.abilityPhase:
-				return (
-					<AbilityPhase
-						cardStateList={cardStateList}
-						handleChangePhase={setCurrentPhase}
-					/>
-				);
+				return <AbilityPhase />;
 			case Phase.themeInputPhase:
 				return <ThemeInputPhase />;
 			case Phase.answerPhase:
