@@ -19,7 +19,7 @@ class WsRepository {
         };
 
         this.socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
+            console.error('[Next Server] WebSocket error:', error);
         };
 
     }

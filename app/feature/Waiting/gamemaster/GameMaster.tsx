@@ -6,32 +6,35 @@ import Title from "@/app/components/common/Title";
 import Description from "@/app/components/common/Description";
 import useFetch from "@/app/hooks/useFetch";
 import { useWebSocket } from "@/app/hooks/useWebSocket";
-import { ClientMessage, ClientType } from "@/app/api/types/types";
+import { ClientType } from "@/app/api/types/types";
 import Button from "@/app/components/common/Button";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import { useRouter } from "next/navigation";
 
 const GameMaster: React.FC = () => {
 	const { fetchJoinAsGameMaster, fetchGameStart } = useFetch();
-	const [clientId, setClientId] = useLocalStorage("clientId");
+	const [clientId] = useLocalStorage("clientId");
 	const { messageState, close } = useWebSocket(
 		ClientType.GAME_MASTER,
 		clientId ?? "Client id is note set",
 	);
+	const router = useRouter();
 
 	useEffect(() => {
 		fetchJoinAsGameMaster();
 		return () => {
-			close();
+			// close();
 		};
 	}, []);
 
+	const handleGameStart = useCallback(() => {
+		fetchGameStart();
+		router.push("/battle/gamemaster");
+	}, [fetchGameStart, router]);
+
 	const GameStartButton = () => {
 		return (
-			<Button
-				buttonType="primary"
-				buttonSize="md"
-				onClick={() => fetchGameStart()}
-			>
+			<Button buttonType="primary" buttonSize="md" onClick={handleGameStart}>
 				ゲームスタート！
 			</Button>
 		);
@@ -44,11 +47,10 @@ const GameMaster: React.FC = () => {
 				text={`現在の参加者は${messageState?.message ?? "0"}人です`}
 			/>
 			{(() => {
-				if (parseInt(messageState?.message ?? "0") >= 2) {
+				if (Number.parseInt(messageState?.message ?? "0") >= 2) {
 					return <GameStartButton />;
-				} else {
-					return <></>;
 				}
+				return <></>;
 			})()}
 		</Root>
 	);
