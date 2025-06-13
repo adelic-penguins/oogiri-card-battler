@@ -19,3 +19,5 @@ export const handleChangeCardStateAtom = (
 		});
 	});
 };
+
+export const answerAtom = atom<string>("");
