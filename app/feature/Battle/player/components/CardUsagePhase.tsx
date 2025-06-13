@@ -25,7 +25,7 @@ const CardUsagePhase: React.FC<prop> = ({
 				<Button
 					buttonType="tertiary"
 					buttonSize="md"
-					onClick={() => handleChangePhase(Phase.abilityPhase)}
+					onClick={() => handleChangePhase(Phase.themeInputPhase)}
 					buttonColor="#3eadff"
 				>
 					スキップ

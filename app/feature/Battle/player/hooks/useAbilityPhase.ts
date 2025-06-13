@@ -10,31 +10,20 @@ const useAbilityPhase = (
 	const [activationAbilityQueue, setActivationAbilityQueue] = useState(
 		cardStateList.filter((card) => card.selected),
 	);
-	const [activationAbilityCard, setActivationAbilityCard] =
-		useState<CardType | null>(null);
 
 	useEffect(() => {
-		console.log("activationAbilityQueue", activationAbilityQueue);
-		console.log("activationAbilityCard", activationAbilityCard);
-		if (activationAbilityQueue.length === 0 && activationAbilityCard) {
+		if (activationAbilityQueue.length === 0) {
 			handleChangePhase(Phase.themeInputPhase);
 			return;
 		}
 
-		(async () => {
-			setActivationAbilityCard(activationAbilityQueue[0]);
+		const timer = setTimeout(() => {
+			setActivationAbilityQueue((prev) => structuredClone(prev.slice(1)));
+		}, 5000);
 
-			// 5秒間カードの効果を画面に表示する
-			await new Promise((resolve) => setTimeout(resolve, 5000));
+		return () => clearTimeout(timer);
+	}, [activationAbilityQueue, handleChangePhase]);
 
-			setActivationAbilityQueue((prev) => {
-				const newActivationAbilityQueue = structuredClone(prev.slice(1));
-				return newActivationAbilityQueue;
-			});
-			setActivationAbilityCard(null);
-		})();
-	}, [activationAbilityQueue, activationAbilityCard]);
-
-	return activationAbilityCard;
+	return activationAbilityQueue[0] ?? null;
 };
 export default useAbilityPhase;

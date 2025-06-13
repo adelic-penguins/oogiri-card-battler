@@ -16,12 +16,6 @@ const AbilityPhase: React.FC<prop> = ({ cardStateList, handleChangePhase }) => {
 		cardStateList,
 		handleChangePhase,
 	);
-	useEffect(() => {
-		const timeoutId = setTimeout(() => {
-			handleChangePhase(Phase.themeInputPhase);
-		}, 4000);
-		return () => clearTimeout(timeoutId);
-	});
 	return (
 		<Root>
 			<Title text={"能力発動！"} />
