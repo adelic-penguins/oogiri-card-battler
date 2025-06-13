@@ -9,8 +9,8 @@ import EvaluationPhase from "@/app/feature/Battle/player/components/EvaluationPh
 import EvaluationResultPhase from "@/app/feature/Battle/player/components/EvaluationResultPhase";
 import GameEndPhase from "@/app/feature/Battle/player/components/GameEndPhase";
 import { Phase } from "@/app/types/userState/card";
-import {useAtomValue} from "jotai";
-import {currentPhaseAtom} from "@/app/state/jotai/atoms";
+import { useAtomValue } from "jotai";
+import { currentPhaseAtom } from "@/app/state/jotai/atoms";
 
 const Player: React.FC = () => {
 	const currentPhase = useAtomValue(currentPhaseAtom);
@@ -20,7 +20,12 @@ const Player: React.FC = () => {
 			case Phase.cardUsagePhase:
 				return <CardUsagePhase />;
 			case Phase.abilityPhase:
-				return <AbilityPhase />;
+				return (
+					<AbilityPhase
+						cardStateList={cardStateList}
+						handleChangePhase={setCurrentPhase}
+					/>
+				);
 			case Phase.themeInputPhase:
 				return <ThemeInputPhase />;
 			case Phase.answerPhase:

@@ -1,24 +1,25 @@
 "use client";
 
-import React, {useCallback} from "react";
+import React, { useCallback } from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Button from "@/app/components/common/Button";
 import Card from "@/app/components/card/Card";
 import { Phase } from "@/app/types/userState/card";
-import {useAtomValue, useSetAtom} from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
 	currentPhaseAtom,
 	handleChangeCardStateAtom,
-	selectedCardListAtom
+	selectedCardListAtom,
 } from "@/app/state/jotai/atoms";
-import {useAtomCallback} from "jotai/utils";
-
+import { useAtomCallback } from "jotai/utils";
 
 const CardUsagePhase: React.FC = () => {
 	const setCurrentPhase = useSetAtom(currentPhaseAtom);
 	const selectedCardList = useAtomValue(selectedCardListAtom);
-	const handleChangeCardState = useAtomCallback(useCallback(handleChangeCardStateAtom, []));
+	const handleChangeCardState = useAtomCallback(
+		useCallback(handleChangeCardStateAtom, []),
+	);
 	return (
 		<Root>
 			<Title text={"カード使用フェーズ"} />
@@ -42,18 +43,18 @@ const CardUsagePhase: React.FC = () => {
 			</ButtonSection>
 			<SelectCardSection>
 				{selectedCardList
-					.map(card => card.src)
+					.map((card) => card.src)
 					.map((card) => {
-					return (
-						<Card
-							src={card}
-							alt={card}
-							cardName={card}
-							key={card}
-							handleChange={handleChangeCardState}
-						/>
-					);
-				})}
+						return (
+							<Card
+								src={card}
+								alt={card}
+								cardName={card}
+								key={card}
+								handleChange={handleChangeCardState}
+							/>
+						);
+					})}
 			</SelectCardSection>
 		</Root>
 	);
@@ -63,7 +64,7 @@ export default CardUsagePhase;
 const Root = styled("div")(({ theme: _ }) => ({
 	alignItems: "center",
 	display: "flex",
-	gap: 64,
+	gap: 32,
 	flexFlow: "column",
 	height: "100%",
 	justifyContent: "center",
@@ -75,10 +76,8 @@ const ButtonSection = styled("div")(({ theme: _ }) => ({
 	gap: 24,
 }));
 const SelectCardSection = styled("div")(({ theme: _ }) => ({
-	bottom: 24,
 	display: "flex",
 	gap: 24,
 	justifyContent: "center",
-	position: "absolute",
 	width: "100%",
 }));
