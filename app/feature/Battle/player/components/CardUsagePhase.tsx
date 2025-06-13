@@ -1,23 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useCallback } from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Button from "@/app/components/common/Button";
 import Card from "@/app/components/card/Card";
 import { Phase } from "@/app/types/userState/card";
+import { useAtomValue, useSetAtom } from "jotai";
+import {
+	currentPhaseAtom,
+	handleChangeCardStateAtom,
+	selectedCardListAtom,
+} from "@/app/state/jotai/atoms";
+import { useAtomCallback } from "jotai/utils";
 
-type prop = {
-	cardSrcList: string[];
-	handleChangeCardState: (cardName: string, cardState: boolean) => void;
-	handleChangePhase: React.Dispatch<React.SetStateAction<Phase>>;
-};
-
-const CardUsagePhase: React.FC<prop> = ({
-	cardSrcList,
-	handleChangeCardState,
-	handleChangePhase,
-}) => {
+const CardUsagePhase: React.FC = () => {
+	const setCurrentPhase = useSetAtom(currentPhaseAtom);
+	const selectedCardList = useAtomValue(selectedCardListAtom);
+	const handleChangeCardState = useAtomCallback(
+		useCallback(handleChangeCardStateAtom, []),
+	);
 	return (
 		<Root>
 			<Title text={"カード使用フェーズ"} />
@@ -25,7 +27,7 @@ const CardUsagePhase: React.FC<prop> = ({
 				<Button
 					buttonType="tertiary"
 					buttonSize="md"
-					onClick={() => handleChangePhase(Phase.themeInputPhase)}
+					onClick={() => setCurrentPhase(Phase.abilityPhase)}
 					buttonColor="#3eadff"
 				>
 					スキップ
@@ -33,24 +35,26 @@ const CardUsagePhase: React.FC<prop> = ({
 				<Button
 					buttonType="primary"
 					buttonSize="md"
-					onClick={() => handleChangePhase(Phase.abilityPhase)}
+					onClick={() => setCurrentPhase(Phase.abilityPhase)}
 					buttonColor="#ffc944"
 				>
 					選択されたカードを使用
 				</Button>
 			</ButtonSection>
 			<SelectCardSection>
-				{cardSrcList.map((card) => {
-					return (
-						<Card
-							src={card}
-							alt={card}
-							cardName={card}
-							key={card}
-							handleChange={handleChangeCardState}
-						/>
-					);
-				})}
+				{selectedCardList
+					.map((card) => card.src)
+					.map((card) => {
+						return (
+							<Card
+								src={card}
+								alt={card}
+								cardName={card}
+								key={card}
+								handleChange={handleChangeCardState}
+							/>
+						);
+					})}
 			</SelectCardSection>
 		</Root>
 	);

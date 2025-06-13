@@ -11,8 +11,10 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const q = searchParams.get('answer');
   const answer = q || '回答がありません。';
+  const clientId = request.headers.get('X-Client-Id');
   (await wsRepository).sendMessage({
     to: 'game_master',
+    clientId: clientId ?? 'Client is not set.',
     payload: {
       type: 'answer_setted',
       message: answer
