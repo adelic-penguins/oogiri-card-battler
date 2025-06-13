@@ -100,6 +100,10 @@ function handleClient(ws: WebSocket) {
         // クライアントの切断時にマップから削除
         deleteClient(ws);
     });
+
+    ws.on("error", (error) => {
+        console.error('[WebSocket Server]: WebSocket error:', error);
+    });
 }
 
 function deleteClient(ws: WebSocket) {
@@ -146,6 +150,9 @@ function handleInternal(ws: WebSocket) {
             }
         }
     });
+    ws.on("error", (error) => {
+        console.error('[WebSocket Server]: Internal WebSocket error:', error);
+    });
 }
 
 wss.on("close", () => {
@@ -155,7 +162,11 @@ wss.on("close", () => {
     process.exit(0);
 })
 
-const PORT = parseInt(process.env.PORT || "3010");
+wss.on("error", (error) => {
+    console.error('[WebSocket Server]: Error occurred:', error);
+});
+
+const PORT = Number.parseInt(process.env.PORT || "3010");
 server.listen(PORT, () => {
     console.log(`[WebSocket Server]: Server is running on port ${PORT}`);
 });
