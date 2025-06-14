@@ -7,13 +7,14 @@ type Props = {
 	src: string;
 	alt: string;
 	cardName: string;
-	handleChange: (cardName: string, cardState: boolean) => void;
+	handleChange?: (cardName: string, cardState: boolean) => void;
 };
 
 const Card: React.FC<Props> = ({ src, alt, cardName, handleChange }) => {
 	const [cardState, selectCard, unSelectCard, _changeCardState] =
 		useBooleanState(false);
 	const handleChangeCardState = () => {
+		if (!handleChange) return;
 		if (cardState) {
 			unSelectCard();
 		} else {

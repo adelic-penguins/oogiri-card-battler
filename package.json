@@ -20,6 +20,7 @@
     "@types/ws": "^8.18.1",
     "bufferutil": "^4.0.9",
     "cors": "^2.8.5",
+    "jotai": "^2.12.5",
     "json-server": "^1.0.0-beta.3",
     "next": "15.3.3",
     "react": "^19.0.0",

@@ -1,19 +1,18 @@
 "use client";
 
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Button from "@/app/components/common/Button";
 import { useRouter } from "next/navigation";
-import {useLocalStorage} from "@/app/hooks/useLocalStorage";
-import {useUuid} from "@/app/hooks/useUuid";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 const Top: React.FC<{ clientId: string }> = (props) => {
 	const router = useRouter();
 	const [clientId, setClientId] = useLocalStorage("clientId");
 
 	useEffect(() => {
-		if(!clientId) {
+		if (!clientId) {
 			setClientId(props.clientId);
 		}
 	}, [props.clientId]);

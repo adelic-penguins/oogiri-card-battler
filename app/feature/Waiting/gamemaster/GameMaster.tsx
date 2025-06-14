@@ -1,44 +1,47 @@
 "use client";
 
-import React, {useCallback, useEffect} from "react";
+import React, { useCallback, useEffect } from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Description from "@/app/components/common/Description";
 import useFetch from "@/app/hooks/useFetch";
-import {useWebSocket} from "@/app/hooks/useWebSocket";
-import {ClientMessage, ClientType} from "@/app/api/types/types";
+import { useWebSocketForGameMasterWaiting } from "@/app/hooks/useWebSocket";
 import Button from "@/app/components/common/Button";
-import {useLocalStorage} from "@/app/hooks/useLocalStorage";
+import { useRouter } from "next/navigation";
 
 const GameMaster: React.FC = () => {
-
 	const { fetchJoinAsGameMaster, fetchGameStart } = useFetch();
-	const [clientId, setClientId] = useLocalStorage("clientId");
-	const { messageState, close } = useWebSocket(ClientType.GAME_MASTER, clientId ?? "Client id is note set");
+	const { wsMessageState } = useWebSocketForGameMasterWaiting();
+	const router = useRouter();
 
 	useEffect(() => {
 		fetchJoinAsGameMaster();
-		return () => {
-			close();
-		};
-	}, []);
+	}, [fetchJoinAsGameMaster]);
 
-    const GameStartButton = () => {
-        return <Button buttonType="primary" buttonSize="md" onClick={() => fetchGameStart()}>
-            ゲームスタート！
-        </Button>
-    };
+	const handleGameStart = useCallback(() => {
+		fetchGameStart();
+		router.push("/battle/gamemaster");
+	}, [fetchGameStart, router]);
+
+	const GameStartButton = () => {
+		return (
+			<Button buttonType="primary" buttonSize="md" onClick={handleGameStart}>
+				ゲームスタート！
+			</Button>
+		);
+	};
 
 	return (
 		<Root>
 			<Title text={"あなたはゲームマスターです"} />
-			<Description text={`現在の参加者は${messageState?.message ?? "0"}人です`} />
+			<Description
+				text={`現在の参加者は${wsMessageState.message === "" ? 0 : wsMessageState.message}人です`}
+			/>
 			{(() => {
-				if (parseInt(messageState?.message ?? "0") >= 2) {
-                    return <GameStartButton />
-				} else {
-					return <></>
+				if (Number.parseInt(wsMessageState.message ?? "0") >= 2) {
+					return <GameStartButton />;
 				}
+				return <></>;
 			})()}
 		</Root>
 	);

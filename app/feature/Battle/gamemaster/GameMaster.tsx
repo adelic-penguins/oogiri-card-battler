@@ -1,25 +1,34 @@
 "use client";
 
 import React from "react";
-import { styled } from "@mui/system";
-import Title from "@/app/components/common/Title";
-import Description from "@/app/components/common/Description";
+import CardUsagePhase from "./components/CardUsagePhase";
+import ThemeInputPhase from "./components/ThemeInputPhase";
+import AnswerPhase from "./components/AnswerPhasetsx";
+import EvaluationPhase from "./components/EvaluationPhase";
+import EvaluationResultPhase from "./components/EvaluationResultPhase";
+import { Phase } from "@/app/types/userState/card";
+import { useAtomValue } from "jotai";
+import { currentPhaseAtom } from "@/app/state/jotai/atoms";
+import { useWebSocketForGameMasterBattleComponent } from "@/app/hooks/useWebSocket";
 
 const GameMaster: React.FC = () => {
-	return (
-		<Root>
-			<Title text={"あなたはゲームマスターです"} />
-			<Description text={"現在の参加者は0人です"} />
-		</Root>
-	);
+	const currentPhase = useAtomValue(currentPhaseAtom);
+	useWebSocketForGameMasterBattleComponent();
+
+	const currentPhaseComponent = (phase: Phase) => {
+		switch (phase) {
+			case Phase.cardUsagePhase:
+				return <CardUsagePhase />;
+			case Phase.themeInputPhase:
+				return <ThemeInputPhase />;
+			case Phase.answerPhase:
+				return <AnswerPhase />;
+			case Phase.evaluationPhase:
+				return <EvaluationPhase />;
+			case Phase.evaluationResultPhase:
+				return <EvaluationResultPhase />;
+		}
+	};
+	return currentPhaseComponent(currentPhase);
 };
 export default GameMaster;
-
-const Root = styled("div")(({ theme: _ }) => ({
-	alignItems: "center",
-	display: "flex",
-	gap: 64,
-	flexFlow: "column",
-	height: "100%",
-	justifyContent: "center",
-}));

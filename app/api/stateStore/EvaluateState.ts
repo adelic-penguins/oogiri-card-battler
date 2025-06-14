@@ -3,7 +3,7 @@ enum EvaluateState {
     EVALUATING = 'evaluating',
 }
 
-let currentEvaluateState = {
+const currentEvaluateState = {
     value: EvaluateState.IDLE,
 };
 
