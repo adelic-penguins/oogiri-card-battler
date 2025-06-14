@@ -26,11 +26,7 @@ const AnswerPhase: React.FC = () => {
 		}
 		setAnswer(inputText);
 		const { message } = await fetchRespondTheme(inputText);
-		if (!message) {
-			setCurrentPhase(Phase.evaluationPhase);
-		} else {
-			alert("現在ほかの回答者の評価中です。しばらくお待ちください。");
-		}
+		if (!message) setCurrentPhase(Phase.evaluationPhase);
 	}, [inputText, setAnswer, setCurrentPhase, fetchRespondTheme]);
 
 	return (
