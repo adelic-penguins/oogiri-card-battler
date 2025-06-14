@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import CardUsagePhase from "@/app/feature/Battle/player/components/CardUsagePhase";
 import AbilityPhase from "@/app/feature/Battle/player/components/AbilityPhase";
 import ThemeInputPhase from "@/app/feature/Battle/player/components/ThemeInputPhase";
@@ -11,9 +11,11 @@ import GameEndPhase from "@/app/feature/Battle/player/components/GameEndPhase";
 import { Phase } from "@/app/types/userState/card";
 import { useAtomValue } from "jotai";
 import { currentPhaseAtom } from "@/app/state/jotai/atoms";
+import { useWebSocketForPlayerBattleComponent } from "@/app/hooks/useWebSocket";
 
 const Player: React.FC = () => {
 	const currentPhase = useAtomValue(currentPhaseAtom);
+	useWebSocketForPlayerBattleComponent();
 
 	const currentPhaseComponent = (phase: Phase) => {
 		switch (phase) {

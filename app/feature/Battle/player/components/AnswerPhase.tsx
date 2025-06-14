@@ -6,29 +6,37 @@ import Title from "@/app/components/common/Title";
 import Description from "@/app/components/common/Description";
 import Button from "@/app/components/common/Button";
 import InputArea from "@/app/components/common/InputArea";
-import { useSetAtom } from "jotai";
-import { answerAtom } from "@/app/state/jotai/atoms";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { answerAtom, themeAtom } from "@/app/state/jotai/atoms";
 import { Phase } from "@/app/types/userState/card";
 import { currentPhaseAtom } from "@/app/state/jotai/atoms";
+import useFetch from "@/app/hooks/useFetch";
 
 const AnswerPhase: React.FC = () => {
 	const setAnswer = useSetAtom(answerAtom);
-	const [inputText, setInputText] = useState("");
+	const [inputText, setInputText] = useAtom(answerAtom);
 	const setCurrentPhase = useSetAtom(currentPhaseAtom);
+	const theme = useAtomValue(themeAtom);
+	const { fetchRespondTheme } = useFetch();
 
-	const checkInputFilled = useCallback(() => {
+	const checkInputFilled = useCallback(async () => {
 		if (!inputText) {
 			alert("回答を入力してくれ。逃げるな。");
 			return;
 		}
 		setAnswer(inputText);
-		setCurrentPhase(Phase.evaluationPhase);
-	}, [inputText]);
+		const { message } = await fetchRespondTheme(inputText);
+		if (!message) {
+			setCurrentPhase(Phase.evaluationPhase);
+		} else {
+			alert("現在ほかの回答者の評価中です。しばらくお待ちください。");
+		}
+	}, [inputText, setAnswer, setCurrentPhase, fetchRespondTheme]);
 
 	return (
 		<Root>
 			<Title text={"お題回答"} />
-			<Description text={"こんなドラえもんは嫌だ"} />
+			<Description text={theme} />
 			<InputArea
 				value={inputText}
 				onChange={setInputText}

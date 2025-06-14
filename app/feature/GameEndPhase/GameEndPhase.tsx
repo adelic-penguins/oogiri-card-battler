@@ -6,9 +6,12 @@ import Title from "@/app/components/common/Title";
 import Button from "@/app/components/common/Button";
 import Description from "@/app/components/common/Description";
 import { useRouter } from "next/navigation";
+import { wsStateAtom } from "@/app/state/jotai/atoms";
+import { useAtomValue } from "jotai";
 
 const GameEndPhase: React.FC = () => {
     const router = useRouter();
+	const wsState = useAtomValue(wsStateAtom);
 	return (
 		<Root>
 			<Title text={"終了！"} />
@@ -20,6 +23,7 @@ const GameEndPhase: React.FC = () => {
 					buttonColor="#5fd97a"
 					textColor="#222"
 					onClick={() => {
+						wsState.close();
 						router.push("/");
 					}}
 				>

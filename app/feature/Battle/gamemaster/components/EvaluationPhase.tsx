@@ -5,31 +5,47 @@ import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Description from "@/app/components/common/Description";
 import Button from "@/app/components/common/Button";
-import { useSetAtom } from "jotai";
-import { currentPhaseAtom } from "@/app/state/jotai/atoms";
+import useFetch from "@/app/hooks/useFetch";
+import { answerAtom, currentPhaseAtom, evaluationResultAtom, themeAtom } from "@/app/state/jotai/atoms";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Phase } from "@/app/types/userState/card";
 
 const EvaluationPhase: React.FC = () => {
-	const setPhase = useSetAtom(currentPhaseAtom);
+
+	const { fetchEvaluate } = useFetch();
+	const answer = useAtomValue(answerAtom);
+	const theme = useAtomValue(themeAtom);
+	const setCurrentPhase = useSetAtom(currentPhaseAtom);
+	const setEvaluationResult = useSetAtom(evaluationResultAtom);
+
+	const handleFailedClick = () => {
+		fetchEvaluate("failed");
+		setCurrentPhase(Phase.evaluationResultPhase);
+		setEvaluationResult("failed");
+	};
+	const handleSuccessClick = () => {
+		fetchEvaluate("success");
+		setCurrentPhase(Phase.evaluationResultPhase);
+		setEvaluationResult("success");
+	};
+
 	useEffect(() => {
-		setTimeout(() => {
-			// ここで次のフェーズに遷移する処理を実装
-			// 例えば、ルーティングを変更するなど
-			setPhase(Phase.evaluationResultPhase);
-		}, 5000); // 5秒後に次のフェーズへ遷移
-	}, [setPhase]);
+		console.log("Evaluation Phase");
+	}
+	, []);
 
 	return (
 		<Root>
 			<Title text={"ゲームスタート！"} />
-			<Description text={"こんなドラえもんは嫌だ"} />
-			<AnswerText>手が5本生えている</AnswerText>
+			<Description text={theme} />
+			<AnswerText>{answer}</AnswerText>
 			<ButtonArea>
 				<EvalButton
 					buttonType="primary"
 					buttonSize="md"
 					buttonColor="#f44321"
 					textColor="#fff"
+					onClick={handleFailedClick}
 				>
 					failed
 				</EvalButton>
@@ -38,6 +54,7 @@ const EvaluationPhase: React.FC = () => {
 					buttonSize="md"
 					buttonColor="#5fd97a"
 					textColor="#222"
+					onClick={handleSuccessClick}
 				>
 					success
 				</EvalButton>

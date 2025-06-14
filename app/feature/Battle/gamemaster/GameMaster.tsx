@@ -9,9 +9,11 @@ import EvaluationResultPhase from "./components/EvaluationResultPhase";
 import { Phase } from "@/app/types/userState/card";
 import { useAtomValue } from "jotai";
 import { currentPhaseAtom } from "@/app/state/jotai/atoms";
+import { useWebSocketForGameMasterBattleComponent } from "@/app/hooks/useWebSocket";
 
 const GameMaster: React.FC = () => {
 	const currentPhase = useAtomValue(currentPhaseAtom);
+	useWebSocketForGameMasterBattleComponent();
 
 	const currentPhaseComponent = (phase: Phase) => {
 		switch (phase) {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import wsRepository from '../repositories/WsRepository';
+import { currentEvaluateState, EvaluateState } from '../stateStore/EvaluateState';
 
 export async function GET(request: NextRequest) {
     // クエリパラメータから評価を取得
@@ -16,5 +17,6 @@ export async function GET(request: NextRequest) {
         }
     });
 
+    currentEvaluateState.value = EvaluateState.IDLE;
     return NextResponse.json({ message: 'ok' });
 }

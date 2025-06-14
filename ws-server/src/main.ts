@@ -72,7 +72,7 @@ function handleClient(ws: WebSocket) {
 
     ws.on("pong", () => {
         console.debug('[WebSocket Server]: Received pong from client');
-        const client = wsClientList.find(client => client.ws == ws);
+        const client = wsClientList.find(client => client.ws === ws);
         if (client) {
             client.isAlive = true; // クライアントが生きていることを確認
         } else {
@@ -82,14 +82,14 @@ function handleClient(ws: WebSocket) {
 
     ws.on('close', () => {
         console.debug('[WebSocket Server]: Client connection closed');
-        const wsClient = wsClientList.find(client => client.ws == ws);
+        const wsClient = wsClientList.find(client => client.ws === ws);
         const clientId = wsClient?.clientId;
 
         // クライアントの離脱をサーバーに通知
         if(internalClient) {
             if (clientId) {
                 const message = {
-                    message: `client_disconnected`,
+                    message: "client_disconnected",
                     clientId: clientId,
                 };
                 internalClient.send(JSON.stringify(message));
@@ -107,13 +107,14 @@ function handleClient(ws: WebSocket) {
 }
 
 function deleteClient(ws: WebSocket) {
-    const wsClient = wsClientList.find(client => client.ws == ws);
+    const wsClient = wsClientList.find(client => client.ws === ws);
     wsClientList = wsClientList.filter(client => client.ws !== ws);
     console.debug(`[WebSocket Server]: Client of uuid ${wsClient?.clientId} deleted`);
 }
 
 const pingInterval = setInterval(() => {
-    wsClientList.forEach(client => {
+    console.debug("[WebSocket Server]: Sending ping to all clients", wsClientList.length);
+    for (const client of wsClientList) {
         setImmediate(() => {
             if (!client.isAlive) {
                 client.ws.terminate();
@@ -121,10 +122,10 @@ const pingInterval = setInterval(() => {
             }
             client.isAlive = false;
             client.ws.ping(() => {
-                console.debug(`[WebSocket Server]: Ping sent to client`);
+                console.debug("[WebSocket Server]: Ping sent to client");
             });
         });
-    });
+    }
 }, 3000);
 
 function handleInternal(ws: WebSocket) {
@@ -136,7 +137,7 @@ function handleInternal(ws: WebSocket) {
     ws.on('message', (data) => {
         const jsonData = JSON.parse(data.toString()) as InternalMessage;
         console.debug('[WebSocket Server]: Received from internal:', jsonData);
-        if (jsonData.to == ClientType.RESPONDENT) {
+        if (jsonData.to === ClientType.RESPONDENT) {
             console.debug(`[WebSocket Server]: Sending to: ${jsonData.to}`);
             const respondentClients = wsClientList.filter(client => client.clientType === ClientType.RESPONDENT);
             for (const client of respondentClients) {

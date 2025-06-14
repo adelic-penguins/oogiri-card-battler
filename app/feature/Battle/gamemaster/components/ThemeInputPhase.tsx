@@ -1,35 +1,28 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Button from "@/app/components/common/Button";
 import InputArea from "@/app/components/common/InputArea";
-import { useRouter } from "next/navigation";
-import { useSetAtom } from "jotai";
-import { currentPhaseAtom } from "@/app/state/jotai/atoms";
+import useFetch from "@/app/hooks/useFetch";
+import { useAtom, useSetAtom } from "jotai";
+import { currentPhaseAtom, themeAtom } from "@/app/state/jotai/atoms";
 import { Phase } from "@/app/types/userState/card";
 
 const ThemeInputPhase: React.FC = () => {
-	const [theme, setTheme] = useState("");
+	const [theme, setTheme] = useAtom(themeAtom);
+	const { fetchInputTheme } = useFetch();
+	const setCurrentPhase = useSetAtom(currentPhaseAtom);
 
 	const handleInputChange = (value: string) => {
 		setTheme(value);
 	};
 
 	const handleSubmit = () => {
-		// ここでテーマ送信処理を実装
-		setTheme("");
+		fetchInputTheme(theme);
+		setCurrentPhase(Phase.answerPhase);
 	};
-
-	const setPhase = useSetAtom(currentPhaseAtom);
-	useEffect(() => {
-		setTimeout(() => {
-			// ここで次のフェーズに遷移する処理を実装
-			// 例えば、ルーティングを変更するなど
-			setPhase(Phase.answerPhase);
-		}, 5000); // 5秒後に次のフェーズへ遷移
-	}, [setPhase]);
 
 	return (
 		<Root>

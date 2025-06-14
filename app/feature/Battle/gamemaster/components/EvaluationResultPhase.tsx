@@ -4,28 +4,37 @@ import React, { useEffect } from "react";
 import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Button from "@/app/components/common/Button";
-import { useRouter } from "next/navigation";
+import { useAtomValue, useSetAtom } from "jotai";
+import { currentPhaseAtom, evaluationResultAtom, themeAtom, wsMessageStateAtom } from "@/app/state/jotai/atoms";
+import { Phase } from "@/app/types/userState/card";
 
 const EvaluationResultPhase: React.FC = () => {
-	const router = useRouter();
+	const theme = useAtomValue(themeAtom);
+	const evaluationResult = useAtomValue(evaluationResultAtom);
+	const setCurrentPhase = useSetAtom(currentPhaseAtom);
+	const setWsMessage = useSetAtom(wsMessageStateAtom);
+
 	useEffect(() => {
 		setTimeout(() => {
-			// ここで次のフェーズに遷移する処理を実装
-			// 例えば、ルーティングを変更するなど
-			router.push("/game-end-phase");
-		}, 5000); // 5秒後に次のフェーズへ遷移
-	}, [router]);
+			setWsMessage({
+				type: "",
+				message: ""
+			});
+			setCurrentPhase(Phase.answerPhase);
+		}, 5000);
+	}, [setCurrentPhase, setWsMessage]);
+
 	return (
 		<Root>
 			<Title text={"ゲームスタート！"} />
-			<ThemeText>こんなドラえもんは嫌だ</ThemeText>
+			<ThemeText>{theme}</ThemeText>
 			<ButtonArea>
 				<NoPointButton
 					buttonType="primary"
 					buttonSize="md"
 					buttonColor="#f44321"
 				>
-					no point...
+					{evaluationResult === "failed" ? "No Point" : "1 Point"}
 				</NoPointButton>
 			</ButtonArea>
 		</Root>

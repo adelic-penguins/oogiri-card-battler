@@ -1,81 +1,87 @@
+import { useCallback } from "react";
+
 const useFetch = () => {
 	/**
 	 * ゲームマスターが回答を評価するためのエンドポイント
 	 * @param evaluate 得点数
 	 */
-	const fetchEvaluate = async (evaluate: string) => {
+	const fetchEvaluate = useCallback(async (evaluate: string) => {
 		try {
 			await fetchBase(`/api/evaluate?evaluate=${evaluate}`);
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
-	};
+	}, []);
+
 	/**
 	 * ゲームの開始をサーバーに伝えるためのエンドポイント
 	 */
-	const fetchGameStart = async () => {
+	const fetchGameStart = useCallback(async () => {
 		try {
 			await fetchBase("/api/game-start");
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
-	};
+	}, []);
 
 	/**
 	 * ゲームマスターがお題を決めるためのエンドポイント
 	 * @param theme お題内容
 	 */
-	const fetchInputTheme = async (theme: string) => {
+	const fetchInputTheme = useCallback(async (theme: string) => {
 		try {
 			await fetchBase(`/api/input-theme?theme=${theme}`);
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
-	};
+	}, []);
 
 	/**
 	 * ゲームマスターとして参加したことを通知するエンドポイント
 	 */
-	const fetchJoinAsGameMaster = async () => {
+	const fetchJoinAsGameMaster = useCallback(async () => {
 		try {
 			await fetchBase("/api/join-as-game-master");
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
-	};
+	}, []);
 
 	/**
 	 * 回答者として参加したことを通知するエンドポイント
 	 */
-	const fetchJoinAsResponder = async () => {
+	const fetchJoinAsResponder = useCallback(async () => {
 		try {
 			await fetchBase("/api/join-as-responder");
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
-	};
+	}, []);
 
 	/**
 	 * 回答者が回答を送信するためのエンドポイント
 	 * @param answer 回答内容
 	 */
-	const fetchRespondTheme = async (answer: string) => {
+	const fetchRespondTheme = useCallback(async (answer: string) => {
 		try {
-			await fetchBase(`/api/respond-theme?answer=${answer}`);
+			return await fetchBase(`/api/respond-theme?answer=${answer}`)
+			.then(res => res.json()) as { message: string };
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
-	};
+		return { message: null };
+	}, []);
+
 	/**
-	 * 回答者のカードの選択が終了したことを通知するエンドポイント
+	 * 回答者のカードの選択および能力発動が終了したことを通知するエンドポイント
 	 */
-	const fetchSelectCard = async () => {
+	const fetchSelectCard = useCallback(async () => {
 		try {
 			await fetchBase("/api/select-card");
 		} catch (error) {
 			console.error("Fetch failed", error);
 		}
-	};
+	}, []);
 
 	return {
 		fetchEvaluate,
