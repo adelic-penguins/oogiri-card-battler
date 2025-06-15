@@ -111,7 +111,8 @@ function fetchBase(input: string | URL | globalThis.Request,
 	};
 	console.debug("[Browser]: Client ID added to request headers.", clientId);
 	console.debug("[Browser]: Fetch init.", newInit);
-	return fetch(input, newInit);
+	const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+	return fetch(`${basePath}${input}`, newInit);
 }
 
 export default useFetch;

@@ -6,7 +6,11 @@ services:
       context: ../../../
       dockerfile: deployment/staging/docker/next/Dockerfile
       args:
-        - NEXT_PUBLIC_WS_SERVER_URL=${STG_WS_SERVER_URL}
+        - WS_SERVER_URL=${STG_WS_SERVER_URL}
+        - JSON_SERVER_URL=${STG_JSON_SERVER_URL}
+        - BASE_PATH=${STG_BASE_PATH}
+        - NEXT_PUBLIC_BASE_PATH=${STG_NEXT_PUBLIC_BASE_PATH}
+        - NEXT_PUBLIC_WS_SERVER_URL=${STG_NEXT_PUBLIC_WS_SERVER_URL}
     container_name: ocb-nextjs
     ports:
       - "4000:3000"

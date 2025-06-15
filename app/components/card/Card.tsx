@@ -10,6 +10,8 @@ type Props = {
 	handleChange?: (cardName: string, cardState: boolean) => void;
 };
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 const Card: React.FC<Props> = ({ src, alt, cardName, handleChange }) => {
 	const [cardState, selectCard, unSelectCard, _changeCardState] =
 		useBooleanState(false);
@@ -28,7 +30,7 @@ const Card: React.FC<Props> = ({ src, alt, cardName, handleChange }) => {
 				alt={alt}
 				cardState={cardState}
 				height={275}
-				src={`/images/${src}`}
+				src={`${basePath}/images/${src}`}
 				style={{ objectFit: "cover" }}
 				width={200}
 			/>
