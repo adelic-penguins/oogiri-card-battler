@@ -3,7 +3,7 @@
 import React from "react";
 import CardUsagePhase from "./components/CardUsagePhase";
 import ThemeInputPhase from "./components/ThemeInputPhase";
-import AnswerPhase from "./components/AnswerPhasetsx";
+import AnswerPhase from "./components/AnswerPhase";
 import EvaluationPhase from "./components/EvaluationPhase";
 import EvaluationResultPhase from "./components/EvaluationResultPhase";
 import { Phase } from "@/app/types/userState/card";

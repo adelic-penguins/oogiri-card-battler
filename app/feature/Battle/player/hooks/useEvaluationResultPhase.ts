@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import {
-	evaluationResultAtom,
-	totalPointAtom,
-} from "@/app/state/jotai/atoms";
+import { evaluationResultAtom, totalPointAtom } from "@/app/state/jotai/atoms";
 
 const useEvaluationResultPhase = (): {
 	evaluationResultText: string;

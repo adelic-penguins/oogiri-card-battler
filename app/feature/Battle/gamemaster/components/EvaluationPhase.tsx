@@ -6,12 +6,16 @@ import Title from "@/app/components/common/Title";
 import Description from "@/app/components/common/Description";
 import Button from "@/app/components/common/Button";
 import useFetch from "@/app/hooks/useFetch";
-import { answerAtom, currentPhaseAtom, evaluationResultAtom, themeAtom } from "@/app/state/jotai/atoms";
+import {
+	answerAtom,
+	currentPhaseAtom,
+	evaluationResultAtom,
+	themeAtom,
+} from "@/app/state/jotai/atoms";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Phase } from "@/app/types/userState/card";
 
 const EvaluationPhase: React.FC = () => {
-
 	const { fetchEvaluate } = useFetch();
 	const answer = useAtomValue(answerAtom);
 	const theme = useAtomValue(themeAtom);
@@ -31,8 +35,7 @@ const EvaluationPhase: React.FC = () => {
 
 	useEffect(() => {
 		console.log("Evaluation Phase");
-	}
-	, []);
+	}, []);
 
 	return (
 		<Root>

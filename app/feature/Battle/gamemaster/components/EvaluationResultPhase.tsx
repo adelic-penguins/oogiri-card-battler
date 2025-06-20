@@ -5,7 +5,12 @@ import { styled } from "@mui/system";
 import Title from "@/app/components/common/Title";
 import Button from "@/app/components/common/Button";
 import { useAtomValue, useSetAtom } from "jotai";
-import { currentPhaseAtom, evaluationResultAtom, themeAtom, wsMessageStateAtom } from "@/app/state/jotai/atoms";
+import {
+	currentPhaseAtom,
+	evaluationResultAtom,
+	themeAtom,
+	wsMessageStateAtom,
+} from "@/app/state/jotai/atoms";
 import { Phase } from "@/app/types/userState/card";
 
 const EvaluationResultPhase: React.FC = () => {
@@ -18,7 +23,7 @@ const EvaluationResultPhase: React.FC = () => {
 		setTimeout(() => {
 			setWsMessage({
 				type: "",
-				message: ""
+				message: "",
 			});
 			setCurrentPhase(Phase.answerPhase);
 		}, 5000);

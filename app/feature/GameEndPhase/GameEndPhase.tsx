@@ -10,7 +10,7 @@ import { wsStateAtom } from "@/app/state/jotai/atoms";
 import { useAtomValue } from "jotai";
 
 const GameEndPhase: React.FC = () => {
-    const router = useRouter();
+	const router = useRouter();
 	const wsState = useAtomValue(wsStateAtom);
 	return (
 		<Root>

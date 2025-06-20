@@ -8,7 +8,7 @@ import { useWebSocketForGameMasterCardUsagePhase } from "@/app/hooks/useWebSocke
 
 const CardUsagePhase: React.FC = () => {
 	useWebSocketForGameMasterCardUsagePhase();
-	
+
 	return (
 		<Root>
 			<Title text={"カード使用フェーズ"} />
